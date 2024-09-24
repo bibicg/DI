@@ -27,7 +27,7 @@
 
 <h2>Estado del proyecto</h2>
 <p align="center"><img src="https://github.com/user-attachments/assets/b5eff775-aa44-4c45-b238-278378d076a4" alt="emoji de estrella"></p> 
-<p align="center">Proyecto finalizado.</p>
+<p align="center">:star:Proyecto finalizado:star:</p>
 <h4>Se realizan mejoras continuas para un funcionamiento todavía más óptimo. última actualización junio/2024 - versión 5.2.7 : </h4>
 
 
