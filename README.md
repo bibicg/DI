@@ -43,11 +43,11 @@ La tecnología detrás de la aplicación ha sido diseñada para gestionar:
 
 📁 Acceso al proyecto
 
-**Indica cómo se puede descargar o acceder al código fuente del proyecto, ya sea proyecto inicial o final**
+<p>**Indica cómo se puede descargar o acceder al código fuente del proyecto, ya sea proyecto inicial o final**</p>
 
 🛠️ Abre y ejecuta el proyecto
 
-**Muestra las instrucciones necesarias para abrir y ejecutar el proyecto**
+<p>**Muestra las instrucciones necesarias para abrir y ejecutar el proyecto**</p>
 
 <h2> Tecnologías utilizadas </h2>
 <h4>Frontend (Aplicaciones Web y Móviles)</h4>
@@ -70,14 +70,15 @@ La tecnología detrás de la aplicación ha sido diseñada para gestionar:
 <ul><li>Amazon Web Services (AWS)</li></ul>
 
 <h2> Personas contribuyentes </h2>
-| [<img src="https://avatars.githubusercontent.com/u/37356058?v=4" width=115><br><sub>Camila Fernanda Alves</sub>](https://github.com/camilafernanda) |  [<img src="https://avatars.githubusercontent.com/u/71970858?v=4" width=115><br><sub>Ellen Pimentel</sub>]([https://github.com/guilhermeonrails](https://github.com/ellenpimentel)) |  [<img src="https://avatars.githubusercontent.com/u/91544872?v=4" width=115><br><sub>Génesys Rondón</sub>](https://github.com/genesysaluralatam) |
-| :---: | :---: | :---: |
+<img src="https://github.com/user-attachments/assets/0a45c165-65f6-47be-84eb-fbae38ce7866" width=115><br><sub>bibicg... ¡no estaría mal!</sub>
+
+
 <h2> Personas desarrolladoras del proyecto </h2>
 La aplicación de Just Eat fue desarrollada por un equipo interno de la empresa, que ha crecido y evolucionado desde sus inicios. Just Eat fue fundada en Dinamarca en 2001 por Jesper Buch junto con un pequeño equipo de desarrolladores. Desde entonces, la empresa ha experimentado una rápida expansión, y el desarrollo de la aplicación y la plataforma tecnológica ha sido llevado a cabo principalmente por los equipos de tecnología y desarrollo de producto dentro de la compañía. A medida que Just Eat creció y se internacionalizó, con presencia en muchos países, el desarrollo de su plataforma y su aplicación móvil fue gestionado por un equipo tecnológico distribuido en varias oficinas alrededor del mundo, particularmente en su sede tecnológica en Londres, Reino Unido, y otras ubicaciones importantes.
 En resumen, aunque no fue desarrollada por una única persona o un proveedor externo, la aplicación fue y sigue siendo construida y mejorada por un equipo técnico interno altamente especializado.
 
 <h2> Licencia </h2>
-
+La licencia de uso de la aplicación Just Eat es típicamente una licencia de software propietario. Al descargar y utilizar la aplicación, los usuarios deben aceptar los términos y condiciones impuestos por la empresa, lo que implica una serie de derechos y restricciones sobre cómo se puede utilizar la aplicación. No se trata de software de código abierto.
 
 
 
