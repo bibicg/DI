@@ -25,17 +25,25 @@
 
 ![descripcion_justEat](https://github.com/user-attachments/assets/12767100-efa1-4c5f-b245-835798e8287c)
 
-<h4 align="center">
-![emoji_estrella](https://github.com/user-attachments/assets/b5eff775-aa44-4c45-b238-278378d076a4)
-:Estado del proyecto: Proyecto finalizado. Se realizan mejoras continuas para un funcionamiento todavía más óptimo. última actualización junio/2024 - versión 5.2.7 :![emoji_estrella](https://github.com/user-attachments/assets/602ab8f9-b415-499e-84d6-33bd34cce098)
-</h4>
+<h2>Estado del proyecto</h2>
+<p align="center"><img src="https://github.com/user-attachments/assets/b5eff775-aa44-4c45-b238-278378d076a4" alt="emoji de estrella"></p> 
+<p align="center">Proyecto finalizado.</p>
+<h4>Se realizan mejoras continuas para un funcionamiento todavía más óptimo. última actualización junio/2024 - versión 5.2.7 : </h4>
 
+
+
+<h2>Funcionalidades del proyecto</h2>
 ## Demostración de funciones y aplicaciones: este apartado se deja vacío para el readme, pero lo dejo aquí para tenerlo como guía. Podría ponerlo con imágenes
-## Acceso al proyecto: cómo descargar el código del proyecto
-## Tecnologías utilizadas
-## Personas contribuyentes
-## Personas desarrolladoras del proyecto
-## Licencia
+- `Funcionalidad 1`: descripción de la funcionalidad 1-
+- `Funcionalidad 2`: descripción de la funcionalidad 2-
+- `Funcionalidad 3`: descripción de la funcionalidad 3
+
+
+<h2> Acceso al proyecto: cómo descargar el código del proyecto</h2>
+<h2> Tecnologías utilizadas </h2>
+<h2> Personas contribuyentes </h2>
+<h2> Personas desarrolladoras del proyecto </h2>
+<h2> Licencia </h2>
 
 
 
