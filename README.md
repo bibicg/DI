@@ -33,10 +33,10 @@
 
 <h2>Funcionalidades del proyecto</h2>
 ## Demostración de funciones y aplicaciones: este apartado se deja vacío para el readme, pero lo dejo aquí para tenerlo como guía. Podría ponerlo con imágenes
-La tecnología detrás de la aplicación ha sido diseñada para gestionar:
-- Un sistema de pedidos en línea de alta demanda.
-- La interacción entre clientes, restaurantes y repartidores.
-- Integración de métodos de pago y localización geográfica.
+<h4>La tecnología detrás de la aplicación ha sido diseñada para gestionar:</h4>
+<p>- Un sistema de pedidos en línea de alta demanda.</p>
+<p>- La interacción entre clientes, restaurantes y repartidores.</p>
+<p>- Integración de métodos de pago y localización geográfica.</p>
 
 
 <h2> Acceso al proyecto: cómo descargar el código del proyecto</h2>
