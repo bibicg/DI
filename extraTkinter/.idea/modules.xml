@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/extraTkinter.iml" filepath="$PROJECT_DIR$/.idea/extraTkinter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/sprint1Tkinter.iml" filepath="$PROJECT_DIR$/.idea/sprint1Tkinter.iml" />
     </modules>
   </component>
 </project>
