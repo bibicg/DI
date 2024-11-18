@@ -27,8 +27,6 @@ class ControladorNotas: # Esta clase gestionará la lógica de la interacción e
 
         self.actualizar_listbox()
 
-
-
     def agregar_nota(self):
         nueva_nota = self.vistaNotas.entry_nota.get() # - Obtiene el texto del widget `Entry` de la vista utilizando `self.vista.entry_nota.get()`.
         if nueva_nota:
