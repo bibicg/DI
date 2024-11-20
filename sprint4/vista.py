@@ -107,9 +107,9 @@ class MainMenu:
     def ask_player_name(self):
         # Abre un diálogo para solicitar el nombre del jugador. Esta función se utiliza al iniciar una partida para
         # personalizar la experiencia del usuario.
-        player_name = tk.simpledialog.askstring("Nombre del Jugador", "Escribe tu nombre:")
-        if player_name:
-            self.show_difficulty_selection(player_name)
+        nombre_jugador = tk.simpledialog.askstring("Nombre del Jugador", "Escribe tu nombre:")
+        if nombre_jugador:
+            self.show_difficulty_selection(nombre_jugador)
 
     def show_difficulty_selection(self, player_name):
         # Muestra la selección de dificultad y llama al callback para iniciar el juego.
