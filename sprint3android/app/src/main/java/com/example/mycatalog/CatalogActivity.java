@@ -33,7 +33,7 @@ public class CatalogActivity extends AppCompatActivity {
         boton_irDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Arrancando otra actividad...", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Arrancando otra actividad...", Toast.LENGTH_LONG).show();
                 // Declaramos nuestra intención
                 // Nótese que el constructor también recibe
                 // un parámetro de tipo 'Context'

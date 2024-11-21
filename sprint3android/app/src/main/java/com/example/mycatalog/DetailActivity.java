@@ -1,5 +1,6 @@
 package com.example.mycatalog;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -16,4 +17,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class DetailActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //enlazo con la actividad, que es el archivo en xml
+        setContentView(R.layout.activity_detail);
+
+        // 16. linea necesaria porque hemos borrado el text view del xml
+        // Aquí, inicialmente también añadimos un Fragment1 a la interfaz
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, new Fragment1()).commit();
+
+
+    }
 }
