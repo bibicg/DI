@@ -1,4 +1,4 @@
-package com.example.mycatalog;
+package com.example.sprint3android4;
 
 import org.junit.Test;
 

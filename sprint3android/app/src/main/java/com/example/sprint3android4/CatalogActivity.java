@@ -1,4 +1,6 @@
-package com.example.mycatalog;
+package com.example.sprint3android4;
+
+
 
 import android.content.Context;
 import android.content.Intent;

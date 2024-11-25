@@ -1,11 +1,14 @@
-package com.example.mycatalog;
+package com.example.sprint3android4;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -30,4 +33,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
     }
+
+
 }
+

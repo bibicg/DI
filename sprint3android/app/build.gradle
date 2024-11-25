@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mycatalog'
+    namespace 'com.example.sprint3android4'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.mycatalog"
+        applicationId "com.example.sprint3android4"
         minSdk 26
         targetSdk 34
         versionCode 1
@@ -37,5 +37,4 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-
 }
