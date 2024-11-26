@@ -29,7 +29,6 @@ public class CatalogActivity extends AppCompatActivity {
             return insets;
         });
 
-
         //instancia un botón
         Button boton_irDetail = findViewById(R.id.botonIrDetail);
         boton_irDetail.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +43,5 @@ public class CatalogActivity extends AppCompatActivity {
                 context.startActivity(myIntent);
             }
         });
-
     }
 }
