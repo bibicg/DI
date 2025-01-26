@@ -1,9 +1,51 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="illustrator"
             type="com.example.android_firebase_2.models.Illustrator" />
     </data>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
+        <Button
+            android:id="@+id/volverButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="volver"
+            android:layout_margin="16dp" />
+
+        <ImageView
+            android:id="@+id/illustratorImageDetail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentTop="true"
+            android:src="@{illustrator.imagen}" />
+
+        <TextView
+            android:id="@+id/illustratorTitleDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{illustrator.titulo}"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:padding="16dp"
+            android:layout_below="@id/illustratorImageDetail" />
+
+        <TextView
+            android:id="@+id/illustratorDescriptionDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{illustrator.descripcion}"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:padding="16dp"
+            android:layout_below="@id/illustratorTitleDetail" />
+
+
+    </RelativeLayout>
 </layout>
