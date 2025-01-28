@@ -7,6 +7,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
+
 /**
  * Implementar un repositorio (UserRepository) que gestione la autenticación y el almacenamiento
  * de datos en Firebase.
@@ -27,6 +29,11 @@ public class UserRepository {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
                     User userProfile = new User(name, email, phone, address);
+                    // Inicializo el ArrayList de favoritos aquí ya que no lo puedo inicializar
+                    // en el constructor porque los usuarios no tienen favoritos cuando se crean:
+                    if (userProfile.getFavourites() == null) {
+                        userProfile.setFavourites(new ArrayList<>());
+                    }
                     mDatabase.child("users").child(user.getUid()).setValue(userProfile);
                 }
                 userLiveData.setValue(user);
@@ -37,4 +44,3 @@ public class UserRepository {
         return userLiveData;
     }
 }
-
