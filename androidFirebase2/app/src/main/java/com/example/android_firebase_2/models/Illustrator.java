@@ -3,14 +3,16 @@ package com.example.android_firebase_2.models;
 import java.io.Serializable;
 
 public class Illustrator implements Serializable {
-    public String titulo;
-    public String descripcion;
-    public String imagen;
+    private String id;
+    private String titulo;
+    private  String descripcion;
+    private  String imagen;
 
     // se necesita para que firebase pueda deserializar los datos
     public Illustrator() {}
 
-    public Illustrator(String titulo, String descripcion, String imagen) {
+    public Illustrator(String id, String titulo, String descripcion, String imagen) {
+        this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.imagen = imagen;
@@ -29,5 +31,7 @@ public class Illustrator implements Serializable {
         return imagen;
     }
 
-
+    public String getId() {
+        return id;
+    }
 }
