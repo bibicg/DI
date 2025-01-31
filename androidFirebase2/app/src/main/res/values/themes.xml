@@ -1,9 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Android_Firebase_2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<resources>
+    <style name="Theme.Android_Firebase_2.Light" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryD</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:colorBackground">@color/colorBackgroundLight</item>
+        <item name="android:textColorPrimary">@color/textColorPrimaryLight</item>
     </style>
-
-    <style name="Theme.Android_Firebase_2" parent="Base.Theme.Android_Firebase_2" />
 </resources>
+
+
+
