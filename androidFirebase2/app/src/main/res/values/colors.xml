@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="primary">#6200EE</color>
+    <!-- res/values/colors.xml -->
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryD">#3700B3</color>
+    <color name="colorSecondary">#03DAC5</color>
+    <color name="colorBackgroundLight">#FFFFFF</color>
+    <color name="textColorPrimaryLight">#000000</color>
+    <!-- res/values-night/colors.xml -->
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorPrimaryDarker">#000000</color>
+    <color name="colorSecondaryDark">#03DAC5</color>
+    <color name="colorBackgroundDark">#000000</color>
+    <color name="textColorPrimaryDark">#FFFFFF</color>
 </resources>
+
+
+
+
+
+
