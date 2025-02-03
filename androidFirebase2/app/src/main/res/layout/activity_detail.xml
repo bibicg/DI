@@ -16,6 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="volver"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="16dp" />
 
         <ImageView
@@ -23,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/volverButton"
             android:src="@{illustrator.imagen}" />
 
         <TextView
@@ -46,6 +48,13 @@
             android:padding="16dp"
             android:layout_below="@id/illustratorTitleDetail" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/favoritoFB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/favorito" />
 
     </RelativeLayout>
 </layout>
