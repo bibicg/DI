@@ -1,8 +1,12 @@
 package com.example.android_firebase_2.views;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -28,30 +32,55 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Cargar el tema desde SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        boolean isDarkMode = preferences.getBoolean("darkMode", false);
+
+        // Establecer el tema antes de cargar el layout
+        if (isDarkMode) {
+            setTheme(R.style.Theme_Android_Firebase_2_Dark);
+        } else {
+            setTheme(R.style.Theme_Android_Firebase_2);
+        }
+
         super.onCreate(savedInstanceState);
-        // Enlace con el layout adecuado:
+        // Enlace con el layout adecuado
         ActivityDashboardBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard);
 
-        // Inicializa el adaptador para ilustradores:
+        // Botón para cambiar el tema
+        FloatingActionButton themeButton = findViewById(R.id.themeButton);
+        themeButton.setOnClickListener(view -> {
+            boolean isDarkModeEnabled = preferences.getBoolean("darkMode", false);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("darkMode", !isDarkModeEnabled);
+            editor.apply();
+
+            // Cambiar el tema
+            setTheme(!isDarkModeEnabled ? R.style.Theme_Android_Firebase_2_Dark : R.style.Theme_Android_Firebase_2);
+            recreate();
+        });
+
+
+        // Inicializar el adaptador para ilustradores
         illustratorAdapter = new IllustratorAdapter(new ArrayList<>());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(illustratorAdapter);
 
-        // Configura el ViewModel:
+        // Configurar el ViewModel
         illustratorViewModel = new ViewModelProvider(this).get(IllustratorViewModel.class);
         illustratorViewModel.getIllustratorLiveData().observe(this, illustrators -> {
-            // Actualizar el adaptador cuando cambien los datos:
+            // Actualizar el adaptador cuando cambien los datos
             illustratorAdapter.setIllustrators(illustrators);
         });
 
-        // Configura el botón de logout:
+        // botón de logout
         Button logoutButton = findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(v -> {
-            // Llamar al logout en el ViewModel:
+            // Llama a la función de logout en el ViewModel
             illustratorViewModel.logout();
         });
 
-        // Observa el LiveData de logout:
+        // LiveData de logout
         illustratorViewModel.getLogoutLiveData().observe(this, isLoggedOut -> {
             if (isLoggedOut) {
                 Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
@@ -62,5 +91,4 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 }
-
 
