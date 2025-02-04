@@ -11,6 +11,10 @@ import java.util.List;
  * Se encarga de interactuar con Firebase Realtime Database obteniendo los datos de los ilustradores.
  * Los expone a través de LiveData.
  */
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class IllustratorRepository {
     private final DatabaseReference illustratorRef;
 
@@ -39,6 +43,13 @@ public class IllustratorRepository {
         });
     }
 }
+
+
+
+
+
+
+
 
 
 
