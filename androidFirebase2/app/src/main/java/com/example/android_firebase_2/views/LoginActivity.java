@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish(); // Opcional: cerrar LoginActivity para que no pueda volver atrás
                     } else {
-                        Toast.makeText(LoginActivity.this, "Error en autenticación de usuario: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Error en autenticación: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

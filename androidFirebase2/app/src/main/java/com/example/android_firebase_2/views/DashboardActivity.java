@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.android_firebase_2.databinding.ActivityDashboardBinding;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.viewmodels.IllustratorViewModel;
@@ -78,6 +75,13 @@ public class DashboardActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> {
             // Llama a la función de logout en el ViewModel
             illustratorViewModel.logout();
+        });
+
+        // botón de ir a favoritos
+        Button favButton = findViewById(R.id.favButton);
+        favButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, FavoritosActivity.class);
+            startActivity(intent);
         });
 
         // LiveData de logout

@@ -11,52 +11,46 @@ import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.databinding.ItemIllustratorBinding;
 import com.example.android_firebase_2.models.Illustrator;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-/**
- * conecta los datos del modelo con las vistas del RecyclerView.
- */
 
-public class IllustratorAdapter extends RecyclerView.Adapter<IllustratorAdapter.IllustratorViewHolder> {
-    private List<Illustrator> illustrators;
+public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.FavoritosViewHolder> {
+    private List<Illustrator> favoritos;
 
-    public IllustratorAdapter(List<Illustrator> illustrators) {
-        this.illustrators = illustrators;
+    public FavoritosAdapter(List<Illustrator> favoritos) {
+        this.favoritos = favoritos;
     }
 
     @NonNull
     @Override
-    public IllustratorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoritosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Usamos DataBinding para inflar el layout del item
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ItemIllustratorBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.item_illustrator, parent, false);
-        return new IllustratorViewHolder(binding);
+        return new FavoritosViewHolder(binding);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull IllustratorViewHolder holder, int position) {
-        Illustrator illustrator = illustrators.get(position);
+    public void onBindViewHolder(@NonNull FavoritosViewHolder holder, int position) {
+        Illustrator illustrator = favoritos.get(position);
         holder.bind(illustrator);
     }
 
     @Override
     public int getItemCount() {
-        return illustrators != null ? illustrators.size() : 0;
+        return favoritos != null ? favoritos.size() : 0;
     }
 
-    public void setIllustrators(List<Illustrator> illustrators) {
-        this.illustrators = illustrators;
+    public void setFavoritos(List<Illustrator> favoritos) {
+        this.favoritos = favoritos;
         notifyDataSetChanged();  // Actualiza el adaptador con los nuevos datos
     }
 
-    public void updateData(List<Illustrator> illustrators) {
-    }
-
-    static class IllustratorViewHolder extends RecyclerView.ViewHolder {
+    static class FavoritosViewHolder extends RecyclerView.ViewHolder {
         private final ItemIllustratorBinding binding;
 
-        public IllustratorViewHolder(ItemIllustratorBinding binding) {
+        public FavoritosViewHolder(ItemIllustratorBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             // Aquí movemos el OnClickListener al ViewHolder
@@ -81,5 +75,8 @@ public class IllustratorAdapter extends RecyclerView.Adapter<IllustratorAdapter.
             binding.executePendingBindings();
         }
     }
-
 }
+
+
+
+
