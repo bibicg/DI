@@ -2,6 +2,7 @@ package com.example.android_firebase_2.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText etEmail, etPassword;
+    private Button loginBtn;
+    private Button registerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +24,17 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         etEmail = findViewById(R.id.emailRegEditText);
+        etEmail.setContentDescription("Escribe el mail con el que te quieres loguear");
         etPassword = findViewById(R.id.passwordEditText);
+        etPassword.setContentDescription("Escribe una contraseña");
 
-        findViewById(R.id.loginButton).setOnClickListener(v -> loginUser());
+        loginBtn = findViewById(R.id.loginButton);
+        loginBtn.setContentDescription("Botón para loguaerte");
+        loginBtn.setOnClickListener(v -> loginUser());
 
-        findViewById(R.id.registerGoButton).setOnClickListener(v -> {
+        registerBtn = findViewById(R.id.registerGoButton);
+        loginBtn.setContentDescription("Botón para registrarte");
+        registerBtn.setOnClickListener(v -> {
             // Ir a la pantalla de registro
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);

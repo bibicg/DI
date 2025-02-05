@@ -1,9 +1,20 @@
 <resources>
     <style name="Theme.Android_Firebase_2.Dark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDarker</item>
-        <item name="colorSecondary">@color/colorSecondaryDark</item>
-        <item name="android:colorBackground">@color/colorBackgroundDark</item>
-        <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
+        <!-- Color de fondo principal -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <!-- Fondo de la app -->
+        <item name="android:colorBackground">@color/background_dark</item>
+
+        <!-- Colores de texto -->
+        <item name="android:textColorPrimary">@color/textColorPrimary_dark</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary_dark</item>
+
+        <!-- Estilos de líneas o separadores -->
+        <item name="android:divider">@color/divider_dark</item>
     </style>
 </resources>
+
+

@@ -46,6 +46,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Botón para cambiar el tema
         FloatingActionButton themeButton = findViewById(R.id.themeButton);
+        themeButton.setContentDescription("Botón para cambiar el modo de visualización: modo claro o modo oscuro");
         themeButton.setOnClickListener(view -> {
             boolean isDarkModeEnabled = preferences.getBoolean("darkMode", false);
             SharedPreferences.Editor editor = preferences.edit();
@@ -72,6 +73,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         // botón de logout
         Button logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setContentDescription("Botón para desloguearte de la aplicación");
         logoutButton.setOnClickListener(v -> {
             // Llama a la función de logout en el ViewModel
             illustratorViewModel.logout();
@@ -79,6 +81,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         // botón de ir a favoritos
         Button favButton = findViewById(R.id.favButton);
+        favButton.setContentDescription("Botón para ir a favoritos");
         favButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, FavoritosActivity.class);
             startActivity(intent);
