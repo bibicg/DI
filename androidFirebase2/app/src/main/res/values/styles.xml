@@ -28,6 +28,7 @@
         <item name="colorSecondary">@color/colorSecondaryDark</item>
         <item name="android:colorBackground">@color/colorBackgroundDark</item>
         <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
+        <item name="android:textColor">@color/textColorPrimaryDark</item>
 
     </style>
 </resources>

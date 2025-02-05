@@ -19,11 +19,14 @@
     <color name="dark_text_secondary">#99FFFFFF</color>
     <color name="dark_accent">#03DAC6</color>-->
 
-    <color name="colorPrimary">#6200EE</color>
+    <!-- <color name="colorPrimary">#6200EE</color>-->
+    <color name="colorPrimary">#121212</color>
     <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#BB86FC</color>
+    <!-- <color name="colorPrimaryDark">#BB86FC</color>-->
+    <color name="colorPrimaryDark">#EA899A</color>
     <color name="colorPrimaryDarker">#3700B3</color>
-    <color name="colorSecondaryDark">#03DAC6</color>
+    <color name="colorSecondaryDark">#FF0080</color>
+    <!-- <color name="colorSecondaryDark">#03DAC6</color>-->
     <color name="colorBackgroundLight">#FFFFFF</color>
     <color name="colorBackgroundDark">#121212</color>
     <color name="textColorPrimaryLight">#121212</color>

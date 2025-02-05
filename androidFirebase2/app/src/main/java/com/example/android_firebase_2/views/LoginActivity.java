@@ -54,10 +54,10 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso.", Toast.LENGTH_SHORT).show();
-                        // Ir al dashboard o pantalla principal
+                        // Ir al dashboard
                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                         startActivity(intent);
-                        finish(); // Opcional: cerrar LoginActivity para que no pueda volver atrás
+                        finish(); // Opcional: cerrar LoginActivity para que no pueda volver atrás, pero depende lo que queramos
                     } else {
                         Toast.makeText(LoginActivity.this, "Error en autenticación: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }

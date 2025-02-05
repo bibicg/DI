@@ -15,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// TERCER PASO
+// CON LOS FAVORIOS DESDE AQUI,
 public class UserViewModel extends ViewModel {
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -92,4 +92,52 @@ public class UserViewModel extends ViewModel {
         return favoriteIllustratorsLiveData;
     }
 }
+
+/**
+// Sin la parte de favoritos
+public class UserViewModel extends ViewModel {
+
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private IllustratorRepository illustratorRepository = new IllustratorRepository();
+
+    // Obtener los ilustradores favoritos del usuario
+    public LiveData<List<Illustrator>> fetchFavoriteIllustrators(String userId, FavoritosViewModel favoritosViewModel) {
+        MutableLiveData<List<Illustrator>> favoriteIllustratorsLiveData = new MutableLiveData<>();
+
+        favoritosViewModel.obtenerFavoritos().observeForever(favouriteIds -> {
+            if (favouriteIds == null) {
+                favoriteIllustratorsLiveData.setValue(new ArrayList<>());
+                return;
+            }
+            if (favouriteIds.isEmpty()){
+                favoriteIllustratorsLiveData.setValue(new ArrayList<>()); //Si no hay favoritos, devuelve lista vacia
+                return;
+            }
+
+            databaseReference.child("ilustradores").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Illustrator> favoriteIllustrators = new ArrayList<>();
+                    for (DataSnapshot illustratorSnapshot : snapshot.getChildren()) {
+                        Illustrator illustrator = illustratorSnapshot.getValue(Illustrator.class);
+                        if (illustrator != null && favouriteIds.contains(illustrator.getId())) { // Verifica que illustrator no sea nulo
+                            favoriteIllustrators.add(illustrator);
+                        }
+                    }
+                    favoriteIllustratorsLiveData.setValue(favoriteIllustrators);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Manejar error
+                    favoriteIllustratorsLiveData.setValue(new ArrayList<>()); // Importante manejar el error
+                    System.err.println("Error al obtener ilustradores: " + error.getMessage());
+
+                }
+            });
+        });
+        return favoriteIllustratorsLiveData;
+    }
+
+}*/
 

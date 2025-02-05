@@ -3,17 +3,40 @@ package com.example.android_firebase_2.repositories;
 import com.example.android_firebase_2.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import java.util.ArrayList;
-import java.util.List;
+
+// SIN LOS FAVORITOS (LO HAGO EN EL fAVORITOS REPOSITORY):
+public class UserRepository {
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
+    public UserRepository() {
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("usuarios");
+    }
+
+    public MutableLiveData<FirebaseUser> registerUser(String name, String email, String password, String phone, String address) {
+        MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    User userProfile = new User(name, email, phone, address);
+                    mDatabase.child(user.getUid()).setValue(userProfile);
+                }
+                userLiveData.setValue(user);
+            } else {
+                userLiveData.setValue(null);
+            }
+        });
+        return userLiveData;
+    }
+}
 
 
+/**
 // DESPUÉS DE LOS FAVORITOS:
 
 public class UserRepository {
@@ -42,7 +65,7 @@ public class UserRepository {
         return userLiveData;
     }
 
-    // Método para agregar un favorito
+    // Método para añadir un favorito
     public void addFavourite(String userId, String illustratorId) {
         DatabaseReference userFavoritesRef = mDatabase.child(userId).child("favoritos");
         userFavoritesRef.child(illustratorId).setValue(true);
@@ -77,6 +100,6 @@ public class UserRepository {
 
         return favouritesLiveData;
     }
-}
+}*/
 
 
