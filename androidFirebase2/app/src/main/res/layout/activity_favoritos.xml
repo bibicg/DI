@@ -11,13 +11,30 @@
         android:padding="16dp"
         tools:context=".FavoritosActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mis Favoritos"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/tituloPag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mis Favoritos"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/volverButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VOLVER"
+                android:layout_marginStart="16dp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewFavs"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android_Firebase_2</string>
+    <string name="app_name">Ilustradores españoles</string>
     <string name="ilustrador_imagen">Imagen del ilustrador</string>
     <string name="logout">Cerrar sesión</string>
 </resources>
