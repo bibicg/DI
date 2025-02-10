@@ -25,6 +25,10 @@
     <item name="android:textColorPrimary">@color/textColorPrimaryLight</item>
 
 </style>
+    <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
 </resources>
 
 
