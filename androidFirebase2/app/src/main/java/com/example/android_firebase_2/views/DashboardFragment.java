@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.databinding.FragmentDashboardBinding;
+import com.example.android_firebase_2.viewmodels.DashboardViewModel;
 import com.example.android_firebase_2.viewmodels.IllustratorViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -102,7 +103,15 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 }*/
-// migramos de activity a fragment:
+
+
+/**
+ * migramos de activity a fragment
+ *
+ * AQUÍ LA LOGICA VIENE DE ILLUSTRATOR VIEW MODEL, PERO DEBERÍA VENIR DE DASHBOARD VIEW MODEL,
+ * QUE A SU VEZ VIENE DE DASHBOARD REPOSOTORY, PERO NO ME FUNCIONA :( :( :(
+ */
+
 public class DashboardFragment extends Fragment {
     private IllustratorViewModel illustratorViewModel;
     private IllustratorAdapter illustratorAdapter;
@@ -127,4 +136,33 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 }
+
+/** NO FUNCIONA
+// MIGRAMOS DE ACTIVITY A FRAGMENT
+// USAMOS LA LOGICA QUE VIENE DE DASHBOARD VIEW MODEL, QUE A SU VEZ VIENE DE DASHBOARD REPOSITORY
+public class DashboardFragment extends Fragment {
+    private DashboardViewModel dashboardViewModel;
+    private IllustratorAdapter illustratorAdapter;
+
+    public DashboardFragment() { }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        FragmentDashboardBinding binding = FragmentDashboardBinding.bind(view);
+
+        illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerView.setAdapter(illustratorAdapter);
+
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
+
+        // Observar los cambios en los datos de los ilustradores
+        dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
+            illustratorAdapter.setIllustrators(illustrators);
+        });
+
+        return view;
+    }
+}*/
 

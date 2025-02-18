@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!-- Si usas Data Binding, puedes declarar variables aquí -->
+        <!-- con Data Binding, este es el lugar para declara varibale -->
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- 🔹 Asegurar que el Toolbar tiene ID -->
+            <!-- Asegurar que el Toolbar tiene ID -->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

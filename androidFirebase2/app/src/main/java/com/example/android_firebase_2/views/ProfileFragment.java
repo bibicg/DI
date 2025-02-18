@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
+
+
     private EditText currentPasswordEditText, newPasswordEditText;
     private Switch darkModeSwitch;
     private FirebaseAuth auth;
@@ -41,9 +43,13 @@ public class ProfileFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
         darkModeSwitch.setChecked(prefs.getBoolean("darkMode", false));
 
-        // Listeners
+        // Listeners. TE CAMBIAS DE CONTRASEÑA PERO SI VAS ATRAS EN EL BOTÓN DEL EMULADOR, SALES DE LA APP
+        /**
+         darkModeSwitch.setOnCheckedChangeListener((compoundButton, checked) -> toggleDarkMode(checked));
+         changePasswordButton.setOnClickListener(v -> changePassword());
+         */
         darkModeSwitch.setOnCheckedChangeListener((compoundButton, checked) -> toggleDarkMode(checked));
-        changePasswordButton.setOnClickListener(v -> changePassword());
+        view.findViewById(R.id.changePasswordButton).setOnClickListener(v -> changePassword());
 
         return view;
     }
@@ -75,6 +81,7 @@ public class ProfileFragment extends Fragment {
         prefs.edit().putBoolean("darkMode", enableDarkMode).apply();
 
         AppCompatDelegate.setDefaultNightMode(enableDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        requireActivity().recreate();
+        requireActivity().recreate(); // recreate puede dar problemas porque vuelve a cargar la actividad
+        // y quizás al recargar no se muestran los elementos del RV correctamente
     }
 }

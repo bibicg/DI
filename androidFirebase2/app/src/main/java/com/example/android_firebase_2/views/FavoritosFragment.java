@@ -20,7 +20,7 @@ public class FavoritosFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavoritosAdapter adapter;
     private UserViewModel userViewModel;
-    private Button volver;
+    //private Button volver;
 
     public FavoritosFragment() { }
 
@@ -40,8 +40,8 @@ public class FavoritosFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         });
 
-        volver = view.findViewById(R.id.volverButton);
-        volver.setOnClickListener(v -> requireActivity().onBackPressed());
+        //volver = view.findViewById(R.id.volverButton);
+        //volver.setOnClickListener(v -> requireActivity().onBackPressed());
 
         return view;
     }
