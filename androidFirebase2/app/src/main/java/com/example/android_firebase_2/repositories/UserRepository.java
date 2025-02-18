@@ -19,6 +19,38 @@ public class UserRepository {
 
     public MutableLiveData<FirebaseUser> registerUser(String name, String email, String password, String phone, String address) {
         MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    User userProfile = new User(name, email, phone, address);
+
+                    // Guardar datos en Firebase Realtime Database
+                    mDatabase.child(user.getUid()).setValue(userProfile)
+                            .addOnSuccessListener(aVoid -> userLiveData.postValue(user))
+                            .addOnFailureListener(e -> userLiveData.postValue(null));
+                } else {
+                    userLiveData.postValue(null);
+                }
+            } else {
+                userLiveData.postValue(null);
+            }
+        });
+
+        return userLiveData;
+    }
+    /** funciona el registro pero hay que salir de la app y volver a entrar para logearse
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
+    public UserRepository() {
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("usuarios");
+    }
+
+    public MutableLiveData<FirebaseUser> registerUser(String name, String email, String password, String phone, String address) {
+        MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = mAuth.getCurrentUser();
@@ -32,7 +64,7 @@ public class UserRepository {
             }
         });
         return userLiveData;
-    }
+    }*/
 }
 
 

@@ -19,8 +19,20 @@ public class RegisterViewModel extends ViewModel {
         return userLiveData;
     }
 
+    //Funciona pero no va a ningun sitio ni muestra toast, hay qye salir y volver a entrar
+    /**
     public void register(String name, String email, String password, String phone, String address) {
         userLiveData = userRepository.registerUser(name, email, password, phone, address);
+    }*/
+
+
+    // tengo que usar esto, si uso el de arriba no actualiza (funciona pero hay que salir)
+     public void register(String name, String email, String password, String phone, String address) {
+          userRepository.registerUser(name, email, password, phone, address)
+              .observeForever(firebaseUser -> userLiveData.postValue(firebaseUser));
     }
+
+
+
 }
 
