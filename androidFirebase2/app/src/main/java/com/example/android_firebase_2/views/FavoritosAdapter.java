@@ -2,10 +2,12 @@ package com.example.android_firebase_2.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.databinding.ItemIllustratorBinding;
@@ -15,68 +17,70 @@ import java.util.List;
 
 
 public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.FavoritosViewHolder> {
-    private List<Illustrator> favoritos;
+    private List<Illustrator> favoritosList;
+    private FragmentManager fragmentManager;
 
-    public FavoritosAdapter(List<Illustrator> favoritos) {
-        this.favoritos = favoritos;
+    public FavoritosAdapter(List<Illustrator> favoritosList, FragmentManager fragmentManager) {
+        this.favoritosList = favoritosList;
+        this.fragmentManager = fragmentManager;
+    }
+
+    public void setFavoritosList(List<Illustrator> favoritosList) {
+        this.favoritosList = favoritosList;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public FavoritosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Usamos DataBinding para inflar el layout del item
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        ItemIllustratorBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.item_illustrator, parent, false);
-        return new FavoritosViewHolder(binding);
+        ItemIllustratorBinding binding = ItemIllustratorBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new FavoritosViewHolder(binding, fragmentManager);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull FavoritosViewHolder holder, int position) {
-        Illustrator illustrator = favoritos.get(position);
+        Illustrator illustrator = favoritosList.get(position);
         holder.bind(illustrator);
     }
 
     @Override
     public int getItemCount() {
-        return favoritos != null ? favoritos.size() : 0;
+        return favoritosList.size();
     }
 
-    public void setFavoritos(List<Illustrator> favoritos) {
-        this.favoritos = favoritos;
-        notifyDataSetChanged();  // Actualiza el adaptador con los nuevos datos
-    }
-
-    static class FavoritosViewHolder extends RecyclerView.ViewHolder {
+    class FavoritosViewHolder extends RecyclerView.ViewHolder {
         private final ItemIllustratorBinding binding;
+        private final FragmentManager fragmentManager;
 
-        public FavoritosViewHolder(ItemIllustratorBinding binding) {
+        //Lo adaptamos al fragment:
+        public FavoritosViewHolder(ItemIllustratorBinding binding, FragmentManager fragmentManager) {
             super(binding.getRoot());
             this.binding = binding;
-            // Aquí movemos el OnClickListener al ViewHolder
+            this.fragmentManager = fragmentManager;
+
             binding.getRoot().setOnClickListener(v -> {
                 Illustrator illustrator = binding.getIllustrator();
                 if (illustrator != null) {
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("id", illustrator.getId());  // Pasa el ID del ilustrador
-                    intent.putExtra("titulo", illustrator.getTitulo());
-                    intent.putExtra("imagen", illustrator.getImagen());
-                    intent.putExtra("descripcion", illustrator.getDescripcion());
-                    context.startActivity(intent);
+                    DetailFragment detailFragment = new DetailFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", illustrator.getId());
+                    bundle.putString("titulo", illustrator.getTitulo());
+                    bundle.putString("imagen", illustrator.getImagen());
+                    bundle.putString("descripcion", illustrator.getDescripcion());
+                    detailFragment.setArguments(bundle);
+
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, detailFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
         }
 
         public void bind(Illustrator illustrator) {
-            // Enlazamos el ilustrador con el layout del item
             binding.setIllustrator(illustrator);
             Picasso.get().load(illustrator.getImagen()).into(binding.illustratorImage);
             binding.executePendingBindings();
         }
     }
 }
-
-
-
-

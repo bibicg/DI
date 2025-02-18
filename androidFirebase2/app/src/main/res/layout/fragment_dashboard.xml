@@ -7,52 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Botones en línea horizontal -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
 
-            <Button
-                android:id="@+id/logoutButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:padding="10dp"
-                android:text="Logout"
-                android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/favButton"
-                app:layout_constraintWidth_percent="0.45"/>
-
-            <Button
-                android:id="@+id/favButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="10dp"
-                android:text="Favoritos"
-                android:textColor="@android:color/white"
-                app:layout_constraintStart_toEndOf="@+id/logoutButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.45"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/themeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/sol"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
@@ -60,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:listitem="@layout/item_illustrator"
-            app:layout_constraintTop_toBottomOf="@id/buttonLayout"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

@@ -15,33 +15,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// CON LOS FAVORIOS DESDE AQUI,
+// CON LOS FAVORIOS DESDE AQUI, Y ADAPTADO A LOS FRAGMENT
 public class UserViewModel extends ViewModel {
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    private IllustratorRepository illustratorRepository = new IllustratorRepository();
+    //private IllustratorRepository illustratorRepository = new IllustratorRepository();
     private MutableLiveData<List<Illustrator>> favoriteIllustratorsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<String>> userFavouritesLiveData = new MutableLiveData<>();
 
     // Obtener los favoritos del usuario
     public LiveData<List<String>> getUserFavourites(String userId) {
-        MutableLiveData<List<String>> favouritesLiveData = new MutableLiveData<>();
         databaseReference.child("users").child(userId).child("favoritos")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<String> favouritesList = new ArrayList<>();
                         for (DataSnapshot favSnapshot : snapshot.getChildren()) {
-                            favouritesList.add(favSnapshot.getKey()); // Añadir el ID del ilustrador
+                            favouritesList.add(favSnapshot.getKey()); // id del ilustrador
                         }
-                        favouritesLiveData.setValue(favouritesList);
+                        userFavouritesLiveData.setValue(favouritesList);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        // Manejar error
+                        Log.e("Firebase", "Error al obtener favoritos", error.toException());
                     }
                 });
-        return favouritesLiveData;
+        return userFavouritesLiveData;
     }
 
     // Añadir ilustrador a favoritos
@@ -73,7 +73,7 @@ public class UserViewModel extends ViewModel {
                     List<Illustrator> favoriteIllustrators = new ArrayList<>();
                     for (DataSnapshot illustratorSnapshot : snapshot.getChildren()) {
                         Illustrator illustrator = illustratorSnapshot.getValue(Illustrator.class);
-                        if (favouriteIds.contains(illustrator.getId())) {
+                        if (illustrator != null && favouriteIds.contains(illustrator.getId())) {
                             favoriteIllustrators.add(illustrator);
                         }
                     }
@@ -82,7 +82,7 @@ public class UserViewModel extends ViewModel {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    // Manejar error
+                    Log.e("Firebase", "Error al obtener ilustradores favoritos", error.toException());
                 }
             });
         });
@@ -92,6 +92,9 @@ public class UserViewModel extends ViewModel {
         return favoriteIllustratorsLiveData;
     }
 }
+
+
+
 
 /**
 // Sin la parte de favoritos

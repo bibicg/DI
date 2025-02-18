@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 
 // con favoritos desde UserViewModel
+/**
 public class DetailActivity extends AppCompatActivity {
     private ImageView imageView;
     private TextView titleView;

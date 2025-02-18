@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.android_firebase_2.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -54,8 +55,9 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso.", Toast.LENGTH_SHORT).show();
-                        // Ir al dashboard
-                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        // Ir al dashboard. Ya no, esto queda desactualizado en la rama semana4
+                        //Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish(); // Opcional: cerrar LoginActivity para que no pueda volver atrás, pero depende lo que queramos
                     } else {

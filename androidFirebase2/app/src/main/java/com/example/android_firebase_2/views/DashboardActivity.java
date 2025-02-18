@@ -22,8 +22,9 @@ import java.util.ArrayList;
  * datos expuestos por el ProductViewModel.
  */
 
-
+/**
 public class DashboardActivity extends AppCompatActivity {
+
     private IllustratorViewModel illustratorViewModel;
     private IllustratorAdapter illustratorAdapter;
 
@@ -97,5 +98,5 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
     }
-}
+}*/
 

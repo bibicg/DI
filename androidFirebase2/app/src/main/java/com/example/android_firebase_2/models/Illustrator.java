@@ -34,4 +34,7 @@ public class Illustrator implements Serializable {
     public String getId() {
         return id;
     }
+
+
+
 }

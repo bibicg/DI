@@ -13,7 +13,7 @@ import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.viewmodels.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
-
+/**
 // Obteniendo los favoritos de UserViewModel
 public class FavoritosActivity extends AppCompatActivity {
 
