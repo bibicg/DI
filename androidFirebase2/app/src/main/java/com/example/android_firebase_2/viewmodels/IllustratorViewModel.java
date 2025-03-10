@@ -14,31 +14,42 @@ import java.util.List;
  */
 //FAVORITOS
 public class IllustratorViewModel extends ViewModel {
+    // LiveData que contiene la lista de ilustradores obtenida desde Firebase
     private final MutableLiveData<List<Illustrator>> illustratorLiveData = new MutableLiveData<>();
     private final IllustratorRepository illustratorRepository;
+
+    // LiveData para gestionar el estado de cierre de sesión
     private MutableLiveData<Boolean> logoutLiveData = new MutableLiveData<>();
 
     public IllustratorViewModel() {
+        // Inicialización del repositorio de ilustradores
         illustratorRepository = new IllustratorRepository();
+        // Cargar los datos de los ilustradores al inicializar el ViewModel
         loadProducts();
     }
 
+    // Método para exponer los datos de los ilustradores como LiveData
     public LiveData<List<Illustrator>> getIllustratorLiveData() {
         return illustratorLiveData;
     }
 
+    // Método para exponer el estado de cierre de sesión como LiveData
     public LiveData<Boolean> getLogoutLiveData() {
         return logoutLiveData;
     }
 
+    // Método para cargar la lista de ilustradores desde el repositorio
     private void loadProducts() {
+        // Se le pasa el LiveData a la capa de repositorio para obtener datos de Firebase
         illustratorRepository.getIllustrators(illustratorLiveData);
     }
 
+    // Método para cerrar sesión del usuario en Firebase Authentication
     public void logout() {
-        FirebaseAuth.getInstance().signOut();
-        logoutLiveData.setValue(true);
+        FirebaseAuth.getInstance().signOut(); // Cierra la sesión actual
+        logoutLiveData.setValue(true); // Notifica a la vista que el usuario ha cerrado sesión
     }
 }
+
 
 

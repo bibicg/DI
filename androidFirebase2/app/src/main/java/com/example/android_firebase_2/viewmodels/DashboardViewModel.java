@@ -5,29 +5,27 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.android_firebase_2.models.Illustrator;
-import com.example.android_firebase_2.repositories.DashboardRepository;
+import com.example.android_firebase_2.repositories.IllustratorRepository;
 
 import java.util.List;
 
-// Sigo intentando ajustarme maás a MVVM: ahora uso DashboardRepository
-// en lugar de manejar lógica en IllustratorViewModel como antes
-
+// Nuevo DashboardViewModel para manejar la lógica de DashboardActivity
+//!!!Se encarga de la carga de ilustradores (antes lo hacia directamente la activity)
 public class DashboardViewModel extends ViewModel {
-    /**
-    private final MutableLiveData<List<Illustrator>> illustratorLiveData = new MutableLiveData<>();
-    private final DashboardRepository dashboardRepository;
+    private final IllustratorRepository illustratorRepository;
+    private final MutableLiveData<List<Illustrator>> illustratorLiveData;
 
     public DashboardViewModel() {
-        dashboardRepository = new DashboardRepository();
-        fetchIllustrators(); // Llamamos al método para cargar los datos
+        illustratorRepository = new IllustratorRepository();
+        illustratorLiveData = new MutableLiveData<>();
+        loadIllustrators();
     }
 
     public LiveData<List<Illustrator>> getIllustratorLiveData() {
         return illustratorLiveData;
     }
 
-    public void fetchIllustrators() {
-        dashboardRepository.getIllustrators(illustratorLiveData);
-    }*/
+    private void loadIllustrators() {
+        illustratorRepository.getIllustrators(illustratorLiveData);
+    }
 }
-

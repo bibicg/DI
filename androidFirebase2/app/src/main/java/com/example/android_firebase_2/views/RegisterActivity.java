@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.viewmodels.RegisterViewModel;
 
-
+// Actividad para registrar un nuevo usuario
 public class RegisterActivity extends AppCompatActivity {
     private RegisterViewModel registerViewModel;
     private EditText etFullName, etEmail, etPassword, etPasswordRepeat, etPhone, etAddress;
@@ -21,8 +21,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Inicialización del ViewModel
         registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
+        // Inicialización de los campos de entrada
         etFullName = findViewById(R.id.fullNameEditText);
         etFullName.setContentDescription("Escribe tu nombre");
         etEmail = findViewById(R.id.emailRegEditText);
@@ -37,20 +39,23 @@ public class RegisterActivity extends AppCompatActivity {
         etAddress.setContentDescription("Escribe tu dirección");
 
         registerBtn = findViewById(R.id.registerButton);
+
+        // Listener para el botón de registro
         registerBtn.setOnClickListener(v -> registerUser());
 
+        // Observador para manejar el resultado del registro
         registerViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Toast.makeText(RegisterActivity.this, "Usuario registrado correctamente.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();  //probar con esto pero no se yo
             } else {
                 Toast.makeText(RegisterActivity.this, "Error en el registro.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // Método para registrar el usuario
     private void registerUser() {
         if (!validateInputs()) {
             return;

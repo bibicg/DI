@@ -1,0 +1,117 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.android_firebase_2.viewmodels.RandomViewModel"/>
+        <variable
+            name="illustrator"
+            type="com.example.android_firebase_2.models.Illustrator"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!-- Toolbar -->
+        <!-- no funciona como yo quiero -->
+        <!-- Nueva barra de herramientas -->
+        <!--style="@style/ToolbarStyle"-->
+        <!--<com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:title="Ilustrador aleatorio"
+            app:titleCentered="true"/>-->
+
+        <!-- ScrollView para permitir desplazamiento en caso de textos largos -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/buttonRandom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <!-- para que no haya texto en crudo: android:text="@string/change_random" -->
+                <!-- android:text se usa en TextView, EditText o Button, no en ImageView -->
+                <!-- para que haya compatibilidad con lectores de pantalla: android:contentDescription="@string/illustrator_image" -->
+
+                <ImageView
+                    android:id="@+id/illustratorImageDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/illustrator_image"
+                    app:imageUrl="@{illustrator.imagen}" />
+
+                <!-- En textView uso text (para pantallas) y contentDescription (para TalkBack) -->
+                <!-- cuando el contenido es dinamico, como aqui que viene de firebase, no es necesario referenciar en strings.xml -->
+
+                <TextView
+                    android:id="@+id/illustratorTitleDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{illustrator.titulo}"
+                    android:contentDescription="@string/nombre_ilustrador"
+                    android:textSize="20sp"
+                    android:padding="16dp" />
+
+                <TextView
+                    android:id="@+id/illustratorDescriptionDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{illustrator.descripcion}"
+                    android:contentDescription="@string/descripcion_ilustrador"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- El botón sí debe tener text y content description -->
+        <!-- android:text="@string/change_random" → Muestra el texto en pantalla.
+android:contentDescription="@string/change_random" → Solo lo usa TalkBack, no se muestra en pantalla.-->
+        <Button
+            android:id="@+id/buttonRandom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_random"
+            android:contentDescription="@string/change_random"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

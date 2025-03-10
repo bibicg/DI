@@ -4,5 +4,11 @@
     <string name="logout">Cerrar sesión</string>
     <string name="open_drawer">Abrir menú</string>
     <string name="close_drawer">Cerrar menú</string>
+    <!-- Para el random fragment -->
+    <string name="illustrator_image">Imagen de una obra icónica del ilustrador</string>
+    <string name="change_random">Botón para obtener otro ilustrador random</string>
+    <string name="descripcion_ilustrador">Breve descripción de la historia del ilustrador</string>
+    <string name="nombre_ilustrador">Nombre artístico del ilustrador</string>
+
 
 </resources>

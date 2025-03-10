@@ -1,12 +1,19 @@
 package com.example.android_firebase_2.viewmodels;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.android_firebase_2.models.Illustrator;
 import com.example.android_firebase_2.repositories.IllustratorRepository;
+import com.example.android_firebase_2.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,132 +22,126 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// CON LOS FAVORIOS DESDE AQUI, Y ADAPTADO A LOS FRAGMENT
+//!!!Antes manejaba firebase y favoritos
+//!!!Ahora: FavoritosViewModel maneja los favoritos con UserRepository,
+//y FavoritosActivity simplemente observa los datos.
+
+//!!!Está aquí el tema del MODO OSCURO y el del CAMBIO DE CONTRASEÑA
+
+/**
+ * Se inicializa darkModeState con el valor almacenado en SharedPreferences.
+ * - Se añade getDarkModeState() para exponer el estado del modo oscuro como LiveData.
+ * - Se añade toggleDarkMode(boolean) para actualizar el modo oscuro y guardarlo en SharedPreferences.
+ * - Se aplica el cambio de tema con AppCompatDelegate.setDefaultNightMode().
+ */
+
+/**Esto es con el MODO OSCURO y el CAMBIO DE CONTRASEÑA
 public class UserViewModel extends ViewModel {
+    private final UserRepository userRepository;
+    private LiveData<List<Illustrator>> favoriteIllustratorsLiveData;
+    //!!!para el MODO OSCURO:
+    private MutableLiveData<Boolean> darkModeState = new MutableLiveData<>();
+    private SharedPreferences sharedPreferences;
 
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    //private IllustratorRepository illustratorRepository = new IllustratorRepository();
-    private MutableLiveData<List<Illustrator>> favoriteIllustratorsLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<String>> userFavouritesLiveData = new MutableLiveData<>();
+    /**Lo eliminamos al añadir lo del MODO OSCURO
+    public UserViewModel() {
+        userRepository = new UserRepository();
+    }*/
+/**
+    //!!!!!!para el MODO OSCURO:
+    public UserViewModel(Application application) {
+        super();
+        userRepository = new UserRepository(); // hay que inicializarlo ahora en este contructor
+        sharedPreferences = application.getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        darkModeState.setValue(sharedPreferences.getBoolean("darkMode", false));
+    }
 
-    // Obtener los favoritos del usuario
+    // Método para exponer los favoritos del usuario como LiveData
     public LiveData<List<String>> getUserFavourites(String userId) {
-        databaseReference.child("users").child(userId).child("favoritos")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        List<String> favouritesList = new ArrayList<>();
-                        for (DataSnapshot favSnapshot : snapshot.getChildren()) {
-                            favouritesList.add(favSnapshot.getKey()); // id del ilustrador
-                        }
-                        userFavouritesLiveData.setValue(favouritesList);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "Error al obtener favoritos", error.toException());
-                    }
-                });
-        return userFavouritesLiveData;
+        return userRepository.getUserFavourites(userId);
     }
 
-    // Añadir ilustrador a favoritos
+    // Método para agregar un ilustrador a favoritos usando el repositorio
     public void addFavourite(String userId, String illustratorId) {
-        databaseReference.child("users").child(userId).child("favoritos").child(illustratorId).setValue(true)
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e("Firebase", "Error al añadir favorito", task.getException());
-                    }
-                });
+        userRepository.addFavourite(userId, illustratorId);
     }
 
-    // Eliminar ilustrador de favoritos
+    // Método para eliminar un ilustrador de favoritos usando el repositorio
     public void removeFavourite(String userId, String illustratorId) {
-        databaseReference.child("users").child(userId).child("favoritos").child(illustratorId).removeValue()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e("Firebase", "Error al eliminar favorito", task.getException());
-                    }
-                });
+        userRepository.removeFavourite(userId, illustratorId);
     }
 
-    // Obtener los ilustradores favoritos del usuario
-    public void fetchFavoriteIllustrators(String userId) {
-        getUserFavourites(userId).observeForever(favouriteIds -> {
-            databaseReference.child("ilustradores").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<Illustrator> favoriteIllustrators = new ArrayList<>();
-                    for (DataSnapshot illustratorSnapshot : snapshot.getChildren()) {
-                        Illustrator illustrator = illustratorSnapshot.getValue(Illustrator.class);
-                        if (illustrator != null && favouriteIds.contains(illustrator.getId())) {
-                            favoriteIllustrators.add(illustrator);
-                        }
-                    }
-                    favoriteIllustratorsLiveData.setValue(favoriteIllustrators);
-                }
+    // Método para exponer los ilustradores favoritos del usuario
+    public LiveData<List<Illustrator>> getFavoriteIllustratorsLiveData(String userId) {
+        if (favoriteIllustratorsLiveData == null) {
+            favoriteIllustratorsLiveData = userRepository.getFavoriteIllustrators(userId);
+        }
+        return favoriteIllustratorsLiveData;
+    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase", "Error al obtener ilustradores favoritos", error.toException());
-                }
+    //!!!Método para obtener el estado del modo oscuro como LiveData
+    public LiveData<Boolean> getDarkModeState() {
+        return darkModeState;
+    }
+
+    //!!!Método para cambiar el estado del modo oscuro
+    public void toggleDarkMode(boolean enableDarkMode) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("darkMode", enableDarkMode);
+        editor.apply();
+
+        darkModeState.setValue(enableDarkMode);
+
+        AppCompatDelegate.setDefaultNightMode(
+                enableDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+        );
+    }
+
+    //!!!Método para cambiar la contraseña del usuario
+    public LiveData<Boolean> changePassword(String newPassword) {
+        MutableLiveData<Boolean> passwordChangeResult = new MutableLiveData<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            user.updatePassword(newPassword).addOnCompleteListener(task -> {
+                passwordChangeResult.setValue(task.isSuccessful());
             });
-        });
+        } else {
+            passwordChangeResult.setValue(false);
+        }
+        return passwordChangeResult;
+    }
+}*/
+//solo GESTIÓN DE FAVORITOS, quitamos MODO OSCURO y CAMBIO DE CONTRASEÑA
+public class UserViewModel extends ViewModel {
+    private final UserRepository userRepository;
+    private LiveData<List<Illustrator>> favoriteIllustratorsLiveData;
+
+    public UserViewModel() {
+        userRepository = new UserRepository();
     }
 
-    public LiveData<List<Illustrator>> getFavoriteIllustratorsLiveData() {
+    // Métodos para gestionar favoritos
+    public LiveData<List<String>> getUserFavourites(String userId) {
+        return userRepository.getUserFavourites(userId);
+    }
+
+    public void addFavourite(String userId, String illustratorId) {
+        userRepository.addFavourite(userId, illustratorId);
+    }
+
+    public void removeFavourite(String userId, String illustratorId) {
+        userRepository.removeFavourite(userId, illustratorId);
+    }
+
+    public LiveData<List<Illustrator>> getFavoriteIllustratorsLiveData(String userId) {
+        if (favoriteIllustratorsLiveData == null) {
+            favoriteIllustratorsLiveData = userRepository.getFavoriteIllustrators(userId);
+        }
         return favoriteIllustratorsLiveData;
     }
 }
 
 
 
-
-/**
-// Sin la parte de favoritos
-public class UserViewModel extends ViewModel {
-
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    private IllustratorRepository illustratorRepository = new IllustratorRepository();
-
-    // Obtener los ilustradores favoritos del usuario
-    public LiveData<List<Illustrator>> fetchFavoriteIllustrators(String userId, FavoritosViewModel favoritosViewModel) {
-        MutableLiveData<List<Illustrator>> favoriteIllustratorsLiveData = new MutableLiveData<>();
-
-        favoritosViewModel.obtenerFavoritos().observeForever(favouriteIds -> {
-            if (favouriteIds == null) {
-                favoriteIllustratorsLiveData.setValue(new ArrayList<>());
-                return;
-            }
-            if (favouriteIds.isEmpty()){
-                favoriteIllustratorsLiveData.setValue(new ArrayList<>()); //Si no hay favoritos, devuelve lista vacia
-                return;
-            }
-
-            databaseReference.child("ilustradores").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<Illustrator> favoriteIllustrators = new ArrayList<>();
-                    for (DataSnapshot illustratorSnapshot : snapshot.getChildren()) {
-                        Illustrator illustrator = illustratorSnapshot.getValue(Illustrator.class);
-                        if (illustrator != null && favouriteIds.contains(illustrator.getId())) { // Verifica que illustrator no sea nulo
-                            favoriteIllustrators.add(illustrator);
-                        }
-                    }
-                    favoriteIllustratorsLiveData.setValue(favoriteIllustrators);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Manejar error
-                    favoriteIllustratorsLiveData.setValue(new ArrayList<>()); // Importante manejar el error
-                    System.err.println("Error al obtener ilustradores: " + error.getMessage());
-
-                }
-            });
-        });
-        return favoriteIllustratorsLiveData;
-    }
-
-}*/
 

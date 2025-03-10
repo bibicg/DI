@@ -1,6 +1,12 @@
 <resources>
     <!-- Tema claro -->
     <style name="Theme.Android_Firebase_2" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <!-- Al poner NoActionBar queremos decir que eliminamos la actionbar predeterminada  -->
+    <!--<style name="Theme.Android_Firebase_2" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+
+        <!--<item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>-->
+
     <!-- <item name="colorPrimary">@color/primary</item>
     <item name="colorPrimaryDark">@color/primary_dark</item>
     <item name="colorAccent">@color/accent</item>
@@ -17,12 +23,17 @@
 </style>
 <!-- Tema oscuro -->
     <style name="Theme.Android_Firebase_2.Dark" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- <item name="colorPrimary">@color/dark_primary</item>
-        <item name="colorPrimaryDark">@color/dark_primary_dark</item>
-        <item name="colorAccent">@color/dark_accent</item>
-        <item name="android:textColorPrimary">@color/dark_text_primary</item>
-        <item name="android:textColorSecondary">@color/dark_text_secondary</item>
-        <item name="android:background">@color/dark_background</item>-->
+        <!--<style name="Theme.Android_Firebase_2.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>-->
+
+            <!-- <item name="colorPrimary">@color/dark_primary</item>
+            <item name="colorPrimaryDark">@color/dark_primary_dark</item>
+            <item name="colorAccent">@color/dark_accent</item>
+            <item name="android:textColorPrimary">@color/dark_text_primary</item>
+            <item name="android:textColorSecondary">@color/dark_text_secondary</item>
+            <item name="android:background">@color/dark_background</item>-->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDarker</item>
         <item name="colorSecondary">@color/colorSecondaryDark</item>

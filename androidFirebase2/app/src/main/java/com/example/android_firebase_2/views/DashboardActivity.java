@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.example.android_firebase_2.viewmodels.DashboardViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.android_firebase_2.databinding.ActivityDashboardBinding;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.viewmodels.IllustratorViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -22,10 +25,10 @@ import java.util.ArrayList;
  * datos expuestos por el ProductViewModel.
  */
 
-/**
+//Ahora la activity solo observa los datos para mostrarlos, que vienen del DashboardViewModel
+    /**
 public class DashboardActivity extends AppCompatActivity {
-
-    private IllustratorViewModel illustratorViewModel;
+    private DashboardViewModel dashboardViewModel; //expone los datos y la activity los ve
     private IllustratorAdapter illustratorAdapter;
 
     @Override
@@ -59,15 +62,14 @@ public class DashboardActivity extends AppCompatActivity {
             recreate();
         });
 
-
         // Inicializar el adaptador para ilustradores
         illustratorAdapter = new IllustratorAdapter(new ArrayList<>());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(illustratorAdapter);
 
         // Configurar el ViewModel
-        illustratorViewModel = new ViewModelProvider(this).get(IllustratorViewModel.class);
-        illustratorViewModel.getIllustratorLiveData().observe(this, illustrators -> {
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        dashboardViewModel.getIllustratorLiveData().observe(this, illustrators -> {
             // Actualizar el adaptador cuando cambien los datos
             illustratorAdapter.setIllustrators(illustrators);
         });
@@ -76,8 +78,11 @@ public class DashboardActivity extends AppCompatActivity {
         Button logoutButton = findViewById(R.id.logoutButton);
         logoutButton.setContentDescription("Botón para desloguearte de la aplicación");
         logoutButton.setOnClickListener(v -> {
-            // Llama a la función de logout en el ViewModel
-            illustratorViewModel.logout();
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish(); // Cierra el DashboardActivity
         });
 
         // botón de ir a favoritos
@@ -87,16 +92,7 @@ public class DashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(DashboardActivity.this, FavoritosActivity.class);
             startActivity(intent);
         });
-
-        // LiveData de logout
-        illustratorViewModel.getLogoutLiveData().observe(this, isLoggedOut -> {
-            if (isLoggedOut) {
-                Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Evita volver al Dashboard
-                startActivity(intent);
-                finish(); // Cierra el DashboardActivity
-            }
-        });
     }
 }*/
+
 

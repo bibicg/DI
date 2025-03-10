@@ -16,10 +16,12 @@ public class FavoritosRepository {
     private DatabaseReference userFavoritesRef;
 
     public FavoritosRepository(String userId) {
+        //!!!Referencia a los favoritos del usuario en Firebase
         userFavoritesRef = FirebaseDatabase.getInstance()
                 .getReference("usuarios/" + userId + "/favoritos");
     }
 
+    //!!!Método para obtener la lista de favoritos del usuario
     public LiveData<List<String>> obtenerFavoritos() {
         MutableLiveData<List<String>> favoritosLiveData = new MutableLiveData<>();
         userFavoritesRef.addValueEventListener(new ValueEventListener() { // Escucha cambios en tiempo real
@@ -27,7 +29,7 @@ public class FavoritosRepository {
             public void onDataChange(DataSnapshot snapshot) {
                 List<String> favoritos = new ArrayList<>();
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    favoritos.add(child.getKey());
+                    favoritos.add(child.getKey()); //!!!Almacenar el ID del ilustrador favorito
                 }
                 favoritosLiveData.setValue(favoritos);
             }
@@ -42,10 +44,12 @@ public class FavoritosRepository {
         return favoritosLiveData;
     }
 
+    //!!!Método para agregar un ilustrador a favoritos
     public void agregarFavorito(String ilustradorId) {
         userFavoritesRef.child(ilustradorId).setValue(true);
     }
 
+    //!!!Método para eliminar un ilustrador de favoritos
     public void eliminarFavorito(String ilustradorId) {
         userFavoritesRef.child(ilustradorId).removeValue();
     }

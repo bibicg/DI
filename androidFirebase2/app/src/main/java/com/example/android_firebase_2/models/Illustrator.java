@@ -2,6 +2,9 @@ package com.example.android_firebase_2.models;
 
 import java.io.Serializable;
 
+/**
+ * Define la estructura de los datos.
+ */
 public class Illustrator implements Serializable {
     private String id;
     private String titulo;
@@ -34,7 +37,4 @@ public class Illustrator implements Serializable {
     public String getId() {
         return id;
     }
-
-
-
 }
