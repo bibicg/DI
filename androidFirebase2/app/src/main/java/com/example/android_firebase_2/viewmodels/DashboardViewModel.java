@@ -12,62 +12,49 @@ import java.util.List;
 
 /**
  * Ahora DASHBOARDVIEWMODEL debe obtener datos tanto del repositorio de ilustradores como de los favoritos,
- * ya que debe pasarle a la vista una "mezcla" entre ambos
+ * ya que debe pasarle a la vista una "mezcla" entre ambos. Pero esta mezcla se hará en IllustratorRepository
+ * para cumplir de forma correcta el patrón MVVM.
  *
- * DashboardViewModel se encarga de manejar la lógica de negocio y preparar los datos para el DashboardFragment.
- * Actúa como un puente entre la interfaz de usuario (Fragment) y el modelo de datos (Repositorio).
+ * DashboardViewModel actúa como un puente entre la interfaz de usuario (Fragment) y el modelo de datos (Repositorio).
  * Sus responsabilidades principales son:
  *
- * - Inicialización del Repositorio y ViewModel de Favoritos.
- * - Provisión de datos.
- * - Carga de ilustradores.
+ * - Declara un LiveData para almacenar la lista de ilustradores que NO están en favoritos.
+ * - Inicializa IllustratorRepository en el constructor con el userId (para poder filtrar los ilustradores de cada usuario, ya que ha dejado de
+ * ser una pantalla común para todos).
+ * - Carga la lista de ilustradores que no son favoritos llamando a loadIllustratorsNoFav(), que delega la lógica al repositorio.
  */
 
 
 public class DashboardViewModel extends ViewModel {
+    //Se encarga de obtener los datos desde Firebase:
     private final IllustratorRepository illustratorRepository;
-    private final FavoritosViewModel favoritosViewModel;
+    //Es el LiveData que notificará a la interfaz cuando los datos cambien:
     private final MutableLiveData<List<Illustrator>> illustratorLiveData = new MutableLiveData<>();
 
-
+    /**
+     * Recibe el userId como parámetro y lo usa para inicializar el repositorio.
+     * Llama a loadIllustratorsNoFav() inmediatamente después de inicializar el repositorio, asegurando
+     * que los datos se carguen al crear el viewModel.
+     * @param userId
+     */
     public DashboardViewModel(String userId) {
-        illustratorRepository = new IllustratorRepository();
-        favoritosViewModel = new FavoritosViewModel(userId);
-        loadIllustrators(userId);
+        illustratorRepository = new IllustratorRepository(userId); //ahora el illustrator repository pasa el id del usuario
+        loadIllustratorsNoFav();
     }
 
+    /**
+     * Expone illustratorLiveData a la vista (Fragment o Activity) para que pueda observar los cambios de datos.
+     * @return
+     */
     public LiveData<List<Illustrator>> getIllustratorLiveData() {
+
         return illustratorLiveData;
     }
 
     /**
-     * Este método se encarga de cargar ilustradores. En una primera vuelta, carga todos, después va
-     * comparando mediante el id cuales están en favoritos y cuales no, filtrando aquellos que no son favoritos,
-     * que serán los que le pase a la vista (DashboardFragment) para que los muestre
-     * @param userId
+     * No contiene lógica de negocio, sino que delega la obtención y filtrado de los datos a IllustratorRepository.
      */
-    private void loadIllustrators(String userId) {
-        illustratorRepository.getIllustrators().observeForever(allIllustrators -> {
-            favoritosViewModel.obtenerFavoritos().observeForever(favoritos -> {
-                List<Illustrator> filteredIllustrators = new ArrayList<>();
-
-                // Convertimos la lista de objetos Illustrator a una lista de id
-                List<String> favoritosIds = new ArrayList<>();
-                for (Illustrator favorito : favoritos) {
-                    favoritosIds.add(favorito.getId());
-                }
-
-                // Filtramos los ilustradores que no están en favoritos
-                for (Illustrator illustrator : allIllustrators) {
-                    if (!favoritosIds.contains(illustrator.getId())) {
-                        filteredIllustrators.add(illustrator);
-                    }
-                }
-
-                illustratorLiveData.setValue(filteredIllustrators);
-            });
-        });
+    private void loadIllustratorsNoFav() {
+        illustratorRepository.getIllustratorsNoFav(illustratorLiveData);
     }
-
-
 }
