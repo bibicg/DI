@@ -1,5 +1,7 @@
 package com.example.android_firebase_2.repositories;
 
+import android.util.Log;
+
 import com.example.android_firebase_2.models.Illustrator;
 import com.example.android_firebase_2.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,12 +100,69 @@ public class UserRepository {
     }
 
     // Agregar un ilustrador a favoritos
-    public void addFavourite(String userId, String illustratorId) {
+    public void addFavorito(String userId, String illustratorId) {
         databaseReference.child(userId).child("favoritos").child(illustratorId).setValue(true);
     }
 
     // Eliminar un ilustrador de favoritos
-    public void removeFavourite(String userId, String illustratorId) {
+    public void eliminarFavorito(String userId, String illustratorId) {
         databaseReference.child(userId).child("favoritos").child(illustratorId).removeValue();
     }
+
+    /**
+     * Método que en origen elimina los favoritos según la sesión de usuario (por id) que se haya iniciado.
+     * Este método va a ser llamado desde el método homólogo de FavoritosVieModel, que a su vez tmb. será
+     * llamado desde MainActivity al cliclar el botón de LimpiarFavoritos del Menú lateral.
+     * @param userId
+     */
+
+    /** no está funcionando , la app se queda congelada
+    public void limpiarFavoritos(String userId) {
+        //Se obtiene una referencia a la ubicación de los favoritos del usuario en la BD de firebase:
+        DatabaseReference userFavoritesRef = FirebaseDatabase.getInstance()
+                .getReference("users").child(userId).child("favoritos");
+
+        //onCompleteListener obtiene los datos de la referencia userFavoritesRef:
+        userFavoritesRef.get().addOnCompleteListener(task -> {
+            //verificas si la tarea fue exitosa y si existen datos en el DataSnapshot resultante:
+            if (task.isSuccessful() && task.getResult().exists()) {
+                //si los datos existen, se itera sobre cada dataSnapshot de los favoritos y se llama
+                // a removeValue() en su referencia para eliminar dichos datos:
+                for (DataSnapshot favoritoSnapshot : task.getResult().getChildren()) {
+                    favoritoSnapshot.getRef().removeValue();
+                }
+                Log.d("UserRepository", "Se eliminaron todos tus favoritos.");
+            } else {
+                Log.e("UserRepository", "No se encontraron favoritos para eliminar.");
+            }
+        });
+    }*/
+
+    public void limpiarFavoritos(String userId) {
+        DatabaseReference userFavoritesRef = FirebaseDatabase.getInstance()
+                .getReference("users").child(userId).child("favoritos");
+
+        userFavoritesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot favoritoSnapshot : snapshot.getChildren()) {
+                        favoritoSnapshot.getRef().removeValue();
+                    }
+                    Log.d("UserRepository", "Se eliminaron todos tus favoritos.");
+                } else {
+                    Log.e("UserRepository", "No se encontraron favoritos para eliminar.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("UserRepository", "Error al eliminar favoritos: " + error.getMessage());
+            }
+        });
+    }
+
+
+
+
 }

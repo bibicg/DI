@@ -30,11 +30,20 @@
             android:checkable="true"
             app:showAsAction="never" />
 
+        <item
+            android:id="@+id/nav_clean"
+            android:title="Limpiar favoritos"
+            android:checkable="true"
+            android:icon="@drawable/limpiar"
+            app:showAsAction="never" />
+
     </group>
+
 
     <item
         android:id="@+id/nav_logout"
         android:title="Cerrar Sesión"
         android:icon="@drawable/icono_volver"
+        android:checkable="true"
         app:showAsAction="never" />
 </menu>

@@ -5,17 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.android_firebase_2.models.Illustrator;
-import com.example.android_firebase_2.repositories.FavoritosRepository;
 import com.example.android_firebase_2.repositories.UserRepository;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
-import java.util.List;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 
 //!!!Debe usar UserRepository en lugar de FavoritosRepository
@@ -33,7 +25,6 @@ import java.util.List;
 //Ahora los VIEWMODEL no contactan directamente con Firebase (eso se hace desde los Repository).
 //Ahora los VIEWMODEL solo exponen LiveData a las vistas.
 
-    
 public class FavoritosViewModel extends ViewModel {
     // Repositorio que maneja los favoritos del usuario en Firebase
     private final UserRepository userRepository;
@@ -49,16 +40,31 @@ public class FavoritosViewModel extends ViewModel {
 
     // Método para agregar un ilustrador a la lista de favoritos del usuario
     public void agregarFavorito(String userId, String ilustradorId) {
-        userRepository.addFavourite(userId, ilustradorId);
+        userRepository.addFavorito(userId, ilustradorId);
     }
 
     // Método para eliminar un ilustrador de la lista de favoritos del usuario
     public void eliminarFavorito(String userId, String ilustradorId) {
-        userRepository.removeFavourite(userId, ilustradorId);
+        userRepository.eliminarFavorito(userId, ilustradorId);
     }
 
     // Método que devuelve la lista de ilustradores favoritos como LiveData para que la vista pueda observar los cambios
     public LiveData<List<Illustrator>> obtenerFavoritos() {
         return favoritosLiveData;
     }
+
+
+    // Método para eliminar todos los favoritos
+    public void limpiarFavoritos(String userId) {
+        userRepository.limpiarFavoritos(userId);
+
+        // Forzar actualización de favoritos en UI
+        MutableLiveData<List<Illustrator>> mutableLiveData = (MutableLiveData<List<Illustrator>>) favoritosLiveData;
+        mutableLiveData.postValue(new ArrayList<>()); // Actualizar UI
+    }
+
+
+
+
+
 }

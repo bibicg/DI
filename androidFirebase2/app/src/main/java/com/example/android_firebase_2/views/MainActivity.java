@@ -3,11 +3,14 @@ package com.example.android_firebase_2.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.example.android_firebase_2.viewmodels.FavoritosViewModel;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 // import android.widget.Toolbar; CUIDADO, ESTA IMPORTACIÓN DA ERROR"""""""""""
@@ -18,6 +21,8 @@ import com.example.android_firebase_2.R;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.core.view.GravityCompat;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 /**
  * Con la toolbar, pero no funciona bien
@@ -198,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.nav_random) {
                 selectedFragment = new RandomFragment();
+            } else if (itemId == R.id.nav_clean) {
+                limpiarFavoritos();
             } else if (itemId == R.id.nav_logout) {
                 logoutUser();
                 return true;
@@ -243,5 +250,47 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-}
+
+    /**
+     * DESDE EL NAVIGATION DRAWER, ACCEDEMOS A LIMPIAR-FAVORITOS. ¿Cómo funciona este método?:
+     * 1 - Obtiene el userId del usuario autenticado.
+     * 2 - Crea una instancia de FavoritosViewModel con el userId usando ViewModelProvider.
+     * 3 - Llama al método limpiarFavoritos(userId) en FavoritosViewModel para eliminar los favoritos del usuario en Firebase.
+     * 4 - Muestra un mensaje (Toast) confirmando que los favoritos fueron eliminados.
+     * 5 - Recarga DashboardFragment para reflejar los cambios.
+     */
+
+    private void limpiarFavoritos() {
+        Log.d("LIMPIAR_FAVORITOS", "Botón de Limpiar Favoritos presionado.");
+        //1 - Este userId se usa para acceder a la base de datos y borrar los favoritos de ese usuario:
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("LIMPIAR_FAVORITOS", "Usuario autenticado con ID: " + userId);
+
+        //2 - Crea una instancia de FavoritosViewModel con ViewModelProvider:
+        //(la factorty es necesaria pq favoritosViewModel necesita el userId en sus parámetros)
+        FavoritosViewModel favoritosViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new FavoritosViewModel(userId);
+            }
+        }).get(FavoritosViewModel.class);
+
+        Toast.makeText(this, "Eliminando favoritos...", Toast.LENGTH_SHORT).show();
+
+        //Se llama al metodo LimpiarFavoritos del FavoritosViewModel, que es quien elimina
+        //la referencia de los favoritos del usuario en Firebase, desvinculando los ilustradores:
+        favoritosViewModel.limpiarFavoritos(userId);
+        Log.d("LIMPIAR_FAVORITOS", "Se ha llamado a limpiarFavoritos en ViewModel.");
+
+        Toast.makeText(this, "Se han eliminado todos los favoritos", Toast.LENGTH_SHORT).show();
+
+        //Se reemplaza DashboardFragment por una nueva instancia del mismo fragmento
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new DashboardFragment())
+                .commit();
+        }
+
+    }
+
 
