@@ -5,45 +5,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.android_firebase_2.R;
 import com.example.android_firebase_2.databinding.FragmentDashboardBinding;
 import com.example.android_firebase_2.viewmodels.DashboardViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 
 /**
- * !!!Actualizacion de DashboardFragment para que use DashboardViewModel en lugar de IllustratorViewModel.
+ * Ahora en DASHBOARD FRAGMENT no se cargan todos los ilustradores por defecto, sino solo aquellos
+ * que no han sido marcados como favoritos por el usuario (es decir, la primera vez que el usuario entre
+ * en la app, sí se cargarán todos los ilustradores pq aún no hay favoritos. También se cargarán todos los
+ * ilustradores cuando se limpie favoritos).
  *
- *  Ahora los datos de los ilustradores se cargan desde DashboardViewModel.
- *  Mantiene el RecyclerView y el Adapter funcionando correctamente.
- *  Elimina la dependencia de IllustratorViewModel, asegurando que DashboardFragment solo obtenga datos de su ViewModel.
- */
-
-/**
- * Se usa DataBinding pero de una manera más indirecta que en RandomFragment. Estás obteniendo una instancia del binding usando
- * FragmentDashboardBinding.bind(view), lo cual asocia el layout XML (fragment_dashboard.xml) con el fragmento. Esto permite acceder
- * a las vistas declaradas en el XML a través de binding.
+ * RESUMEN DEL MVVM EN RELACIÓN A LA PANTALLA DE DASHBOARD:
+ * - DashboardFragment inicializa el DashboardViewModel y observa los cambios en los datos de ilustradores.
+ * - DashboardViewModel utiliza IllustratorRepository para cargar los ilustradores y filtrar aquellos que no están en la lista de favoritos del usuario.
+ * - IllustratorRepository interactúa con Firebase para obtener y proporcionar los datos de los ilustradores.
  *
- * Luego, lo usas para:
- * - Configurar el RecyclerView
- * - Observar cambios en el ViewModel
- *
- * Si quisieras usar Data Binding completamente, podrías cambiar la forma en que inflas la vista:
- * FragmentDashboardBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false);
- *
- * Y luego establecer el ViewModel en el binding:
- * binding.setViewModel(dashboardViewModel);
- * binding.setLifecycleOwner(getViewLifecycleOwner());
  */
 
 public class DashboardFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
     private IllustratorAdapter illustratorAdapter;
+    private FragmentDashboardBinding binding;
 
     public DashboardFragment() { }
 
@@ -51,118 +43,55 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("DASHBOARD_FRAGMENT", "DashboardFragment se está creando...");
 
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        FragmentDashboardBinding binding = FragmentDashboardBinding.bind(view);
+        //!!!Infla la vista y la vincula a Binding en dos pasos:
+        //View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        //FragmentDashboardBinding binding = FragmentDashboardBinding.bind(view);
+
+        //Usamos DataBinding para inflar y vincular la vista que le corresponde en un solo paso:
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false);
+
+        // Ahora debemos obtener el ID del usuario autenticado (como en Favoritos, ya que no es para todos el mismo dashboard):
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Configurar ViewModel de la misma manera que FavoritosFragment (para poder pasar el id del usuario)
+        // (podría tener un constructor vacío en el wiewModel, pero da error por la falta de inicialización)
+        // usa Factory pero no como clase aparte, sino dentro del propio código de esta clase
+        dashboardViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new DashboardViewModel(userId);
+            }
+        }).get(DashboardViewModel.class);
 
         //Es necesairo que el constructor del adapter tenga en paramentros el Fragment
         //pq estamos pasando de un fragment a otro fragment
         illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
         //Este sería si pasaramos de fragment a activity:
         //illustratorAdapter = new IllustratorAdapter(new ArrayList<>());
-
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(illustratorAdapter);
 
         Log.d("DASHBOARD_FRAGMENT", "RecyclerView inicializado.");
 
-        // Ahora usamos DashboardViewModel en lugar de IllustratorViewModel
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-        Log.d("DASHBOARD_FRAGMENT", "ViewModel inicializado.");
+        /**
+         // Ahora usamos DashboardViewModel en lugar de IllustratorViewModel
+         dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
+         Log.d("DASHBOARD_FRAGMENT", "ViewModel inicializado.");
 
+         dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
+         Log.d("DASHBOARD_FRAGMENT", "Datos recibidos del ViewModel: " + illustrators.size() + " ilustradores.");
+         illustratorAdapter.setIllustrators(illustrators);
+         });*/
+
+        // Observamos cambios en la lista de ilustradores
         dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
-            Log.d("DASHBOARD_FRAGMENT", "Datos recibidos del ViewModel: " + illustrators.size() + " ilustradores.");
             illustratorAdapter.setIllustrators(illustrators);
         });
 
-        return view;
+        return binding.getRoot();
+
+        //return view;
     }
 }
 
-/**
- * DashboardFragment usando completamente DataBinding
- */
-/**
-public class DashboardFragment extends Fragment {
-    private DashboardViewModel dashboardViewModel;
-    private IllustratorAdapter illustratorAdapter;
-    private FragmentDashboardBinding binding;
-
-    public DashboardFragment() { }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("DASHBOARD_FRAGMENT", "DashboardFragment se está creando...");
-
-        // Usamos DataBinding para inflar la vista
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false);
-
-        // Inicializar ViewModel
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-        binding.setLifecycleOwner(getViewLifecycleOwner());
-
-        // Inicializar el Adapter
-        illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.setAdapter(illustratorAdapter);
-
-        Log.d("DASHBOARD_FRAGMENT", "RecyclerView inicializado.");
-        Log.d("DASHBOARD_FRAGMENT", "ViewModel inicializado.");
-
-        // Observar cambios en el ViewModel y actualizar el Adapter
-        dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
-            Log.d("DASHBOARD_FRAGMENT", "Datos recibidos del ViewModel: " + illustrators.size() + " ilustradores.");
-            illustratorAdapter.setIllustrators(illustrators);
-        });
-
-        return binding.getRoot();
-    }
-}*/
-
-/**
- * Si además de usar por completo dataBinging, quiero usar también el viewModel
- * para no tener que hacer una observacion manual
- */
-/**
-public class DashboardFragment extends Fragment {
-    private DashboardViewModel dashboardViewModel;
-    private IllustratorAdapter illustratorAdapter;
-    private FragmentDashboardBinding binding;
-
-    public DashboardFragment() { }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("DASHBOARD_FRAGMENT", "DashboardFragment se está creando...");
-
-        // Usamos DataBinding para inflar la vista
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false);
-
-        // Inicializar ViewModel y enlazarlo con el binding
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-        binding.setViewModel(dashboardViewModel); //esto así no funciona, debo vinvular el viewmodel en el cml:
-        /**
-         * <data>
-         *         <variable
-         *             name="viewModel"
-         *             type="com.example.android_firebase_2.viewmodels.DashboardViewModel"/>
-         *     </data>
-         */
-/**        binding.setLifecycleOwner(getViewLifecycleOwner());
-
-        // Inicializar el Adapter
-        illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.setAdapter(illustratorAdapter);
-
-        Log.d("DASHBOARD_FRAGMENT", "RecyclerView inicializado.");
-        Log.d("DASHBOARD_FRAGMENT", "ViewModel inicializado y enlazado al Binding.");
-
-        // Observar cambios en el ViewModel y actualizar el Adapter
-        dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
-            Log.d("DASHBOARD_FRAGMENT", "Datos recibidos del ViewModel: " + illustrators.size() + " ilustradores.");
-            illustratorAdapter.setIllustrators(illustrators);
-        });
-
-        return binding.getRoot();
-    }
-}*/
