@@ -21,9 +21,9 @@ public class IllustratorViewModel extends ViewModel {
     // LiveData para gestionar el estado de cierre de sesión
     private MutableLiveData<Boolean> logoutLiveData = new MutableLiveData<>();
 
-    public IllustratorViewModel() {
+    public IllustratorViewModel(String userId) {
         // Inicialización del repositorio de ilustradores
-        illustratorRepository = new IllustratorRepository();
+        illustratorRepository = new IllustratorRepository(userId);
         // Cargar los datos de los ilustradores al inicializar el ViewModel
         loadProducts();
     }

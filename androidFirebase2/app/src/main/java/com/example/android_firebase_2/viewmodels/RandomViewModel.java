@@ -14,8 +14,8 @@ public class RandomViewModel extends ViewModel {
     private MutableLiveData<Illustrator> illustratorLiveData;
     private IllustratorRepository repository;
 
-    public RandomViewModel() {
-        repository = new IllustratorRepository();
+    public RandomViewModel(String userId) {
+        repository = new IllustratorRepository(userId);
         illustratorLiveData = new MutableLiveData<>();
         loadRandomIllustrator();
     }
