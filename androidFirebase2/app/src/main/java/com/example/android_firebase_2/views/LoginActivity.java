@@ -1,6 +1,8 @@
 package com.example.android_firebase_2.views;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -64,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("LOGIN", "Intentando iniciar sesión con: " + email);
 
         // Autenticación con Firebase
+        // añado el guardado en shared preferences
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -73,6 +76,11 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             Log.d("LOGIN", "Usuario autenticado: " + user.getEmail());
+
+                            // Guardar usuario en SharedPreferences
+                            SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+                            sharedPref.edit().putString("userId", user.getUid()).apply();
+
                         } else {
                             Log.e("LOGIN_ERROR", "Usuario autenticado es null después del login.");
                         }
