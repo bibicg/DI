@@ -23,16 +23,19 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class IllustratorRepository {
+    //Referencia a Firebase donde están almacenados todos los ilustradores:
     private final DatabaseReference illustratorRef;
+    //Referencia a los ilustradores favoritos de un usuario específico. No es final porque puede ser null si no hay usuario:
     private DatabaseReference userFavoritesRef;
+    //illustratorLiveData: Almacena y notifica cambios en la lista de ilustradores:
     private final MutableLiveData<List<Illustrator>> illustratorLiveData = new MutableLiveData<>();
 
     /** Se elimina este constructor ya que ahora siempre tenemos que conocer los favoritos del usuario, por tanto su id
      public IllustratorRepository() {
-     //!!!Referencia a la colección de ilustradores en Firebase
-     illustratorRef = FirebaseDatabase.getInstance().getReference("ilustradores");
+        //!!!Referencia a la colección de ilustradores en Firebase
+        illustratorRef = FirebaseDatabase.getInstance().getReference("ilustradores");
 
-     loadIllustrators();
+        loadIllustrators();
      }*/
 
     //Como eliminamos el constructor sin parámetros, es necesario comprobar que el userId no sea null
@@ -40,6 +43,11 @@ public class IllustratorRepository {
         illustratorRef = FirebaseDatabase.getInstance().getReference("ilustradores");
 
         //userFavoritesRef no es final para que permita hacer esta asignacion condicional:
+        //Si userId es válido, crea la referencia a los favoritos del usuario.
+        //Si userId es null o vacío, userFavoritesRef queda null y se registra un error.
+        /**
+         * MEJORAS POSIBLES: Validar userId antes de crear la instancia del repositorio en el ViewModel
+         */
         if (userId != null && !userId.isEmpty()) { // Asegurar que userId no sea null o vacío
             userFavoritesRef = FirebaseDatabase.getInstance().getReference("users/" + userId + "/favoritos");
         } else {
@@ -48,14 +56,28 @@ public class IllustratorRepository {
         }
     }
 
+    /**
+     * Expone illustratorLiveData y carga los ilustradores desde Firebase
+     * Solo llamar loadIllustrators() si illustratorLiveData está vacío, porque sino
+     * cada vez que se llama a getIllustrators(), se ejecuta loadIllustrators() nuevamente,
+     * lo que puede generar múltiples llamadas innecesarias a Firebase.
+     * @return
+     */
     public LiveData<List<Illustrator>> getIllustrators() {
-        loadIllustrators();
+        if (illustratorLiveData.getValue() == null) {
+            loadIllustrators();
+        }
         return illustratorLiveData;
     }
 
+
     //!!!Método para cargar ilustradores desde Firebase y actualizar el LiveData
     private void loadIllustrators() {
+        //Se usa addValueEventListener(), lo que significa que se actualizará cada vez que Firebase cambie
+        //Si los datos no cambian con frecuencia, mejor usar addListenerForSingleValueEvent()
+        //que carga los datos una sola vez en lugar de escuchar cambios constantes.
         illustratorRef.addValueEventListener(new ValueEventListener() {
+            //Recorre los hijos de snapshot para convertirlos en objetos Illustrator y los almacena en illustratorLiveData
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 List<Illustrator> illustrators = new ArrayList<>();
@@ -77,7 +99,12 @@ public class IllustratorRepository {
     }
 
 
-
+    /**
+     * METODO DUPLICADO, HACE LO MISMO UE LOAD ILLUSTRATORS. podemos eliminarlo.
+     * El otro es mejor porque usa LiveData, lo que facilita su uso en el viewModel
+     * @param illustratorLiveData
+     */
+    /**
     //!!!Método para obtener la lista de ilustradores desde Firebase.
     public void getIllustrators(MutableLiveData<List<Illustrator>> illustratorLiveData) {
         illustratorRef.addValueEventListener(new ValueEventListener() {
@@ -98,7 +125,7 @@ public class IllustratorRepository {
                 // Manejo de errores
             }
         });
-    }
+    }*/
 
     //!!!Método para obtener un ilustrador random desde Firebase
     public void getRandomIllustrator(MutableLiveData<Illustrator> illustratorLiveData) {
@@ -133,36 +160,47 @@ public class IllustratorRepository {
         });
     }
 
+    /**
+     * MÉTODO PARA OBTENER ILUSTRADORES EXCLUYENDO LOS FAVORITOS
+     * (Tenía este metodo en el viewModel, pero debe estar aqui y, desde viewModel, llamar a este método)
+     *
+     * 1- Verifica si userFavoritesRef es null (si lo es no podrá devolver la lista de illust.). Se registra un error y se detiene la ejecución.
+     * 2- Obtiene la lista de ilustradores favoritos del usuario desde Firebase (1 sola vez):
+     *      · Hace una consulta a userFavoritesRef y almacena los IDs de los ilustradores favoritos en una lista favoritosIds
+     * 3- Luego, consulta illustratorRef para obtener todos los ilustradores
+     * 4- Filtra los ilustradores para excluir los favoritos: solo añade a la lista los ilustradores cuyo id no esté en favoritosIds.
+     * 5- Actualiza illustratorLiveData con la lista filtrada: finalmente, los ilustradores no favoritos se publican en el LiveData.
+     * @param illustratorLiveData
+     */
 
-
-
-    //con el cambio para que el metodo esté en el repositorio, no el en wiew model:
-    // Método para obtener ilustradores excluyendo los favoritos
     public void getIllustratorsNoFav(MutableLiveData<List<Illustrator>> illustratorLiveData) {
-        if (userFavoritesRef == null) {
+        if (userFavoritesRef == null) { //1
             Log.e("IllustratorRepository", "userFavoritesRef es nulo. No se pueden obtener favoritos.");
             return;
         }
 
-        userFavoritesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        //userFavoritesRef.addListenerForSingleValueEvent(new ValueEventListener() { //2
+        userFavoritesRef.addValueEventListener(new ValueEventListener() { //2: observable permanente, mas adecuado pq quiero que se actualice al dashboard
             @Override
             public void onDataChange(DataSnapshot favoritosSnapshot) {
                 List<String> favoritosIds = new ArrayList<>();
                 for (DataSnapshot child : favoritosSnapshot.getChildren()) {
-                    favoritosIds.add(child.getKey());
+                    favoritosIds.add(child.getKey()); //los favoritos se almacenan en la lista "favoritosIds"
                 }
 
-                illustratorRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                //illustratorRef.addListenerForSingleValueEvent(new ValueEventListener() { //3
+                illustratorRef.addValueEventListener(new ValueEventListener() { //3: observable permanente, mas adecuado pq quiero que se actualice al dashboard
                     @Override
                     public void onDataChange(DataSnapshot illustratorsSnapshot) {
                         List<Illustrator> illustrators = new ArrayList<>();
                         for (DataSnapshot child : illustratorsSnapshot.getChildren()) {
                             Illustrator illustrator = child.getValue(Illustrator.class);
-                            if (illustrator != null && !favoritosIds.contains(illustrator.getId())) {
+
+                            if (illustrator != null && !favoritosIds.contains(illustrator.getId())) { //4
                                 illustrators.add(illustrator);
                             }
                         }
-                        illustratorLiveData.setValue(illustrators);
+                        illustratorLiveData.setValue(illustrators); //5
                     }
 
                     @Override

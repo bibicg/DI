@@ -41,7 +41,8 @@ public class IllustratorViewModel extends ViewModel {
     // Método para cargar la lista de ilustradores desde el repositorio
     private void loadProducts() {
         // Se le pasa el LiveData a la capa de repositorio para obtener datos de Firebase
-        illustratorRepository.getIllustrators(illustratorLiveData);
+        //illustratorRepository.getIllustrators(illustratorLiveData); //este metodo lo comenté, me quedó el otro
+        illustratorRepository.getIllustrators();
     }
 
     // Método para cerrar sesión del usuario en Firebase Authentication
