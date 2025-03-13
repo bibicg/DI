@@ -67,7 +67,9 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = etPhone.getText().toString().trim();
         String address = etAddress.getText().toString().trim();
 
-        registerViewModel.register(name, email, password, phone, address);
+        //registerViewModel.register(name, email, password, phone, address);
+        //this representa el Context de RegisterActivity, lo que permite que UserRepository use SharedPreferences:
+        registerViewModel.register(this, name, email, password, phone, address);
     }
 
     private boolean validateInputs() {
