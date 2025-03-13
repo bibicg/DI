@@ -1,5 +1,7 @@
 package com.example.android_firebase_2.repositories;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.android_firebase_2.models.Illustrator;
@@ -28,6 +30,7 @@ public class UserRepository {
         this.databaseReference = FirebaseDatabase.getInstance().getReference("users");
     }
 
+    /** queda desfasado al añadir las shared preferences
     // Método para registrar un nuevo usuario en Firebase Authentication y almacenarlo en la base de datos
     public MutableLiveData<FirebaseUser> registerUser(String name, String email, String password, String phone, String address) {
         MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
@@ -44,6 +47,41 @@ public class UserRepository {
                 userLiveData.setValue(null);
             }
         });
+        return userLiveData;
+    }*/
+
+    //Tengo que añadir el uid del usuario en la instanciación de un nuevo usuario:
+    public MutableLiveData<FirebaseUser> registerUser(String name, String email, String password, String phone, String address, Context context) {
+        MutableLiveData<FirebaseUser> userLiveData = new MutableLiveData<>();
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    String uid = firebaseUser.getUid();
+
+                    // Guardamos el usuario en Firebase con su uid:
+                    User user = new User(uid, name, email, phone, address);
+                    databaseReference.child(uid).setValue(user).addOnCompleteListener(dbTask -> {
+                        if (dbTask.isSuccessful()) {
+                            Log.d("REGISTER", "Usuario guardado en Firebase: " + uid);
+                        } else {
+                            Log.e("REGISTER_ERROR", "Error al guardar usuario: " + dbTask.getException().getMessage());
+                        }
+                    });
+
+                    // Guardamos el uid del usuario en sharedPreferences:
+                    SharedPreferences sharedPref = context.getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+                    sharedPref.edit().putString("userId", uid).apply();
+
+                    userLiveData.setValue(firebaseUser);
+                }
+            } else {
+                Log.e("REGISTER_ERROR", "Error en el registro: " + task.getException().getMessage());
+                userLiveData.setValue(null);
+            }
+        });
+
         return userLiveData;
     }
 
