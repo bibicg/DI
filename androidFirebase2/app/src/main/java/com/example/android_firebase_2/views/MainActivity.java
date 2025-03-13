@@ -1,6 +1,8 @@
 package com.example.android_firebase_2.views;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.nav_random) {
+                Log.d("MAIN_ACTIVITY", "Cambiando a RandomFragment...");
                 selectedFragment = new RandomFragment();
             } else if (itemId == R.id.nav_clean) {
                 limpiarFavoritos();
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (selectedFragment != null) {
-                Log.d("MAIN_ACTIVITY", "Cambiando a Fragment: " + selectedFragment.getClass().getSimpleName());
+                Log.d("MAIN_ACTIVITY", "Fragmento seleccionado: " + selectedFragment.getClass().getSimpleName());
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainer, selectedFragment)
                         .commit();
@@ -233,12 +236,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** sin shared preferences
     private void logoutUser() {
         Log.d("MAIN_ACTIVITY", "Cerrando sesión...");
         FirebaseAuth.getInstance().signOut();
         drawerLayout.closeDrawers();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
+    }*/
+
+    //implementando las shared preferences en el logout:
+    private void logoutUser() {
+        FirebaseAuth.getInstance().signOut();
+
+        SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        sharedPref.edit().remove("userId").apply(); // Eliminamos userId
+
+        Log.d("LOGOUT", "Usuario eliminado de SharedPreferences");
+
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 
