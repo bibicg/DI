@@ -2,7 +2,12 @@ package com.example.android_firebase_2.models;
 
 import java.util.ArrayList;
 
+/**
+ * Lo modifico por el guardado del usuario en Shared Preferences:
+ * el usuario debe tener el campo uid, que hasta ahora no tenía
+ */
 public class User {
+    private String uid;   // tengo que añadir el uid del usuario
     public String name;
     public String email;
     public String phone;
@@ -14,6 +19,15 @@ public class User {
     public User() { }
 
     public User(String name, String email, String phone, String address) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    // Añado entonces tb. el onstructor con uid:
+    public User(String uid, String name, String email, String phone, String address) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -60,6 +74,16 @@ public class User {
 
     public void setFavourites(ArrayList<String> favourites) {
         this.favourites = favourites;
+    }
+
+    //getter & setter del uid
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
 
