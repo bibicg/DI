@@ -41,6 +41,18 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        /**
+         * Si no usara DataBindg tendria que usar este enfoque para vincular la vista:
+         *      View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+         *
+         *     RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+         *     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+         *
+         *     IllustratorAdapter illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
+         *     recyclerView.setAdapter(illustratorAdapter);
+         *
+         *     return view;
+         */
         Log.d("DASHBOARD_FRAGMENT", "DashboardFragment se está creando...");
 
         //!!!Infla la vista y la vincula a Binding en dos pasos:
@@ -49,6 +61,10 @@ public class DashboardFragment extends Fragment {
 
         //Usamos DataBinding para inflar y vincular la vista que le corresponde en un solo paso:
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false);
+        /**
+         * Podría usar esto ya que no tengo variables en el data del xml:
+         * binding = FragmentDashboardBinding.inflate(inflater, container, false); // Solo ViewBinding
+         */
 
         // Ahora debemos obtener el ID del usuario autenticado (como en Favoritos, ya que no es para todos el mismo dashboard):
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -64,12 +80,33 @@ public class DashboardFragment extends Fragment {
             }
         }).get(DashboardViewModel.class);
 
-        //Es necesairo que el constructor del adapter tenga en paramentros el Fragment
-        //pq estamos pasando de un fragment a otro fragment
+        /**
+         * CREACIÓN DEL ADAPTADOR PARA EL RECYCLER VIEW:
+         *  - Crea una nueva instancia de IllustratorAdapter.
+         *  - Le pasa una lista vacía (new ArrayList<>()) como datos iniciales.
+         *  - Le pasa getParentFragmentManager(), que es el administrador de fragmentos del fragmento padre.
+         *
+         *  - IllustratorAdapter abre otro Fragment cuando se hace clic en un ilustrador.
+         *  - getParentFragmentManager() se usa para manejar esa navegación desde este fragmento a otro.
+         *  - Si el adaptador no necesitara abrir otros fragmentos, podríamos omitir este parámetro.
+         */
         illustratorAdapter = new IllustratorAdapter(new ArrayList<>(), getParentFragmentManager());
         //Este sería si pasaramos de fragment a activity:
         //illustratorAdapter = new IllustratorAdapter(new ArrayList<>());
+
+        /**
+         * CONFIGURACIÓN DEL LAYOUT MANAGER PARA EL RECYCLER VIEW:
+         * - Define el tipo de diseño (layout) del RecyclerView:
+         *   new LinearLayoutManager(getContext()) significa que los elementos se mostrarán en una lista vertical (scrollable).
+         *   // new GridLayoutManager(getContext(), 2); → Para mostrar en rejilla de 2 columnas
+         */
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        /**
+         * ASIGNACIÓN DEL ADAPTADOR AL RECYCLER VIEW:
+         *  - Conecta el RecyclerView con IllustratorAdapter, permitiendo que se muestren los datos.
+         *  - Sin esta línea, el RecyclerView no sabría qué datos mostrar.
+         *  - Asegura que, cuando illustratorAdapter reciba datos nuevos, el RecyclerView pueda actualizarse.
+         */
         binding.recyclerView.setAdapter(illustratorAdapter);
 
         Log.d("DASHBOARD_FRAGMENT", "RecyclerView inicializado.");
@@ -85,13 +122,13 @@ public class DashboardFragment extends Fragment {
          });*/
 
         // Observamos cambios en la lista de ilustradores
-        dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> {
-            illustratorAdapter.setIllustrators(illustrators);
+        dashboardViewModel.getIllustratorLiveData().observe(getViewLifecycleOwner(), illustrators -> { //Recibe datos
+            illustratorAdapter.setIllustrators(illustrators); //actualiza el adaptador, que está conectado al RV, el cual los mostrará
         });
 
-        return binding.getRoot();
+        return binding.getRoot(); // devuelve la vista cuando usas binding
 
-        //return view;
+        //return view; // cuando usas findViewById()
     }
 }
 

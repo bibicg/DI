@@ -21,6 +21,7 @@ public class RandomViewModel extends ViewModel {
     }
 
     public void loadRandomIllustrator() {
+
         repository.getRandomIllustrator(illustratorLiveData);
     }
 

@@ -1,5 +1,7 @@
 package com.example.android_firebase_2.views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -20,6 +23,8 @@ import com.example.android_firebase_2.databinding.FragmentDetailBinding;
 import com.example.android_firebase_2.databinding.FragmentRandomBinding;
 import com.example.android_firebase_2.viewmodels.DashboardViewModel;
 import com.example.android_firebase_2.viewmodels.RandomViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -93,7 +98,7 @@ public class RandomFragment extends Fragment {
 
 /**
  * Añadida ACCESIBILIDAD con setContentDescription
- */
+
 
 public class RandomFragment extends Fragment {
     private RandomViewModel randomViewModel;
@@ -103,7 +108,11 @@ public class RandomFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("RANDOM_FRAGMENT", "RandomFragment se está creando...");
+
+        // Inflar la vista con DataBinding
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_random, container, false);
+        Log.d("RANDOM_FRAGMENT", "Vista inflada correctamente.");
         return binding.getRoot();
     }
 
@@ -111,7 +120,7 @@ public class RandomFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("RANDOM_FRAGMENT", "RandomFragment se está creando...");
+
 
         // Se inicializa el ViewModel y se enlaza con binding
         randomViewModel = new ViewModelProvider(this).get(RandomViewModel.class);
@@ -147,4 +156,97 @@ public class RandomFragment extends Fragment {
         // Cargar el primer ilustrador al iniciar el Fragment
         randomViewModel.loadRandomIllustrator();
     }
+} */
+
+public class RandomFragment extends Fragment {
+
+    private RandomViewModel randomViewModel;
+    private FragmentRandomBinding binding; // Usamos DataBinding
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("RANDOM_FRAGMENT", "RandomFragment se está creando...");
+
+        // Inflar la vista con DataBinding
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_random, container, false);
+
+
+        /**
+        // Obtener el userId del usuario autenticado en Firebase
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null
+                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                : "";*/
+        /**
+        // Obtener el userId desde SharedPreferences en lugar de FirebaseAuth:
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+        String userId = prefs.getString("userId", "");*/
+
+        //Intentar obtener el uid del user desde shared preferences, sino funciona, desde firebase directamente:
+        SharedPreferences prefs = requireActivity().getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+
+        if (userId == null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser() != null
+                    ? FirebaseAuth.getInstance().getCurrentUser().getUid()
+                    : "";
+        }
+
+
+        if (userId.isEmpty()) {
+            Log.e("RANDOM_FRAGMENT", "Error: No se pudo obtener el userId.");
+            Toast.makeText(getContext(), "Error: Usuario no identificado.", Toast.LENGTH_SHORT).show();
+            return binding.getRoot();
+        }
+
+        Log.d("RANDOM_FRAGMENT", "Usuario autenticado con ID: " + userId);
+
+        // Crear el ViewModel con Factory
+        randomViewModel = new ViewModelProvider(this, new RandomViewModelFactory(userId))
+                .get(RandomViewModel.class);
+
+        Log.d("RANDOM_FRAGMENT", "RandomViewModel inicializado correctamente.");
+
+        // Enlazar el ViewModel con el Binding (para DataBinding automático)
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        binding.setViewModel(randomViewModel);
+
+        // Observar cambios en el ilustrador aleatorio y asignarlo al binding
+        randomViewModel.getRandomIllustratorLiveData().observe(getViewLifecycleOwner(), illustrator -> {
+            if (illustrator != null) {
+                Log.d("RANDOM_FRAGMENT", "Ilustrador recibido: " + illustrator.getTitulo());
+                binding.setIllustrator(illustrator); // ESTO ES CLAVE PARA QUE SE MUESTREN LOS DATOS
+            } else {
+                Log.e("RANDOM_FRAGMENT", "No se recibió ilustrador aleatorio.");
+                Toast.makeText(getContext(), "Error al obtener ilustrador.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Configurar botón para obtener otro ilustrador aleatorio
+        binding.buttonRandom.setOnClickListener(v -> {
+            Log.d("RANDOM_FRAGMENT", "Botón presionado, obteniendo otro ilustrador...");
+            randomViewModel.loadRandomIllustrator();
+        });
+
+        return binding.getRoot();
+    }
+
+
+    // Factory para pasar el userId al ViewModel
+    static class RandomViewModelFactory implements ViewModelProvider.Factory {
+        private final String userId;
+
+        RandomViewModelFactory(String userId) {
+            this.userId = userId;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            if (modelClass.isAssignableFrom(RandomViewModel.class)) {
+                return (T) new RandomViewModel(userId);
+            }
+            throw new IllegalArgumentException("Clase desconocida para ViewModel");
+        }
+    }
 }
+

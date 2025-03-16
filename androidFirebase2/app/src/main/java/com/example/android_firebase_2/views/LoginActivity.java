@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText etEmail, etPassword;
-    private Button loginBtn;
-    private Button registerBtn;
+    private Button loginBtn, registerBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.emailRegEditText);
         etEmail.setContentDescription("Escribe el mail con el que te quieres loguear");
         etPassword = findViewById(R.id.passwordEditText);
-        etPassword.setContentDescription("Escribe una contraseña");
+        etPassword.setContentDescription("Escribe tu contraseña");
 
         loginBtn = findViewById(R.id.loginButton);
         loginBtn.setContentDescription("Botón para loguearte");

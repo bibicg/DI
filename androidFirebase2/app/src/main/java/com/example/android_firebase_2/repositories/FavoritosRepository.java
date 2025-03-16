@@ -12,6 +12,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * NO SE USA, ESTÁ TODA LA LÓGICA EN USER REPOSITORY
+ */
+
+/**
 public class FavoritosRepository {
     private DatabaseReference userFavoritesRef;
 
@@ -53,4 +58,4 @@ public class FavoritosRepository {
     public void eliminarFavorito(String ilustradorId) {
         userFavoritesRef.child(ilustradorId).removeValue();
     }
-}
+}*/

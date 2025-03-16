@@ -54,6 +54,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //!!!Con las sharedPreferences hay que comprobar si hay un usuario autenticado:
+        //se ha autenticado en la pantalla de login, guardando el uid en las shared preferences
+        //ahora buscamos en las shared preferences si hay un valor para esa clave (la clave es userId)
         SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
         String userId = sharedPref.getString("userId", null);
 

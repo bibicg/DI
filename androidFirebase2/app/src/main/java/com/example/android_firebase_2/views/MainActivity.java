@@ -308,6 +308,48 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
         }
 
+        //usando Shared Preferences para recuperar el id del usuario
+    private void limpiarFavoritosSp() {
+        Log.d("LIMPIAR_FAVORITOS", "Botón de Limpiar Favoritos presionado.");
+
+        // 1. Obtener userId desde SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+
+        if (userId == null) {
+            Log.e("LIMPIAR_FAVORITOS", "No se encontró el userId en SharedPreferences");
+            Toast.makeText(this, "Error: No se encontró la información del usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d("LIMPIAR_FAVORITOS", "UserId obtenido desde SharedPreferences: " + userId);
+
+        // 2. Crear instancia de ViewModel
+        FavoritosViewModel favoritosViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new FavoritosViewModel(userId);
+            }
+        }).get(FavoritosViewModel.class);
+
+        Toast.makeText(this, "Eliminando favoritos...", Toast.LENGTH_SHORT).show();
+
+        // 3. Llamar a limpiarFavoritos
+        favoritosViewModel.limpiarFavoritos(userId);
+        Log.d("LIMPIAR_FAVORITOS", "Se ha llamado a limpiarFavoritos en ViewModel.");
+
+        Toast.makeText(this, "Se han eliminado todos los favoritos", Toast.LENGTH_SHORT).show();
+
+        // 4. Recargar DashboardFragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new DashboardFragment())
+                .commit();
     }
+
+
+}
+
+
 
 
