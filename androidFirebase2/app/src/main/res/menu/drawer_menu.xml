@@ -37,13 +37,15 @@
             android:icon="@drawable/limpiar"
             app:showAsAction="never" />
 
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Cerrar Sesión"
+            android:icon="@drawable/icono_volver"
+            android:checkable="true"
+            app:showAsAction="never" />
+
     </group>
 
 
-    <item
-        android:id="@+id/nav_logout"
-        android:title="Cerrar Sesión"
-        android:icon="@drawable/icono_volver"
-        android:checkable="true"
-        app:showAsAction="never" />
+
 </menu>
